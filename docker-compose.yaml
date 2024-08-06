@@ -1,0 +1,52 @@
+version: '0.01'
+
+name: azienda-agricola-maggini
+
+services:
+  web:
+    env_file:
+      - .env
+    image: node:${NODEJS_VERSION}
+    working_dir: /home/node/app
+    container_name: nextjs
+    networks:
+      - mynetwork
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    command: sh -c "npm i && npm run dev"
+  http-db:
+    env_file:
+      - .env
+    image: node:${NODEJS_VERSION}
+    working_dir: /home/node/app
+    container_name: http-db
+    networks:
+      - mynetwork
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    command: sh -c "npm i && npm run http-db"
+  db:
+    image: mysql:8.0
+    container_name: db
+    networks:
+      - mynetwork
+    env_file:
+      - .env
+    ports:
+      - '${MYSQL_PORT}:3306'
+    volumes:
+      - dbdata:/var/lib/mysql
+volumes:
+  dbdata:
+    name: azienda-agricola-maggini-dbdata
+networks:
+  mynetwork:
+    driver: bridge
