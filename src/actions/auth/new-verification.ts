@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/lib/db";
-import {getUserByEmail, getUserById} from "@/lib/db/utils/user";
-import { getVerificationTokenByToken } from "@/lib/db/utils/verification-token";
+import {getUserByEmail, getUserById} from "@/lib/db/utils/auth/user";
+import { getVerificationTokenByToken } from "@/lib/db/utils/auth/verification-token";
 import {users, verificationTokens} from "@/lib/db/schemas/auth";
 import {eq} from "drizzle-orm";
 

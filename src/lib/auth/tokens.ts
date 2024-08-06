@@ -2,9 +2,9 @@ import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
-import {getVerificationTokenByEmail, getVerificationTokenByToken} from "@/lib/db/utils/verification-token";
-import { getPasswordResetTokenByEmail } from "@/lib/db/utils/password-reset-token";
-import {getTwoFactorTokenByEmail, getTwoFactorTokenByToken} from "@/lib/db/utils/two-factor-token";
+import {getVerificationTokenByEmail, getVerificationTokenByToken} from "@/lib/db/utils/auth/verification-token";
+import { getPasswordResetTokenByEmail } from "@/lib/db/utils/auth/password-reset-token";
+import {getTwoFactorTokenByEmail, getTwoFactorTokenByToken} from "@/lib/db/utils/auth/two-factor-token";
 import {passwordResetTokens, twoFactorTokens, verificationTokens} from "@/lib/db/schemas/auth";
 import {eq} from "drizzle-orm";
 import {currentUser} from "@/lib/auth/auth";

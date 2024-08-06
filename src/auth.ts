@@ -3,8 +3,8 @@ import NextAuth from "next-auth"
 import {db} from "@/lib/db";
 import authConfig from "@/auth.config";
 import {getUserById} from "@/lib/http-db/utils/user";
-import {getTwoFactorConfirmationByUserId} from "@/lib/db/utils/two-factor-confirmation";
-import {getAccountByUserId} from "@/lib/db/utils/account";
+import {getTwoFactorConfirmationByUserId} from "@/lib/db/utils/auth/two-factor-confirmation";
+import {getAccountByUserId} from "@/lib/db/utils/auth/account";
 import {DrizzleAdapter} from "@auth/drizzle-adapter";
 import {twoFactorConfirmations, type UserRole, UserRoleEnum, users} from "@/lib/db/schemas/auth";
 import {eq} from "drizzle-orm";
