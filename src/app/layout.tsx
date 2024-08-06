@@ -1,14 +1,13 @@
 import type {Metadata} from "next";
-import {Inter as FontSans} from "next/font/google"
+import {Inter} from "next/font/google"
 import "./globals.css";
 import {cn} from "@/lib/utils";
 import {SessionProvider} from "next-auth/react";
 import {TanstackQueryProvider} from "@/components/tanstack-query-provider";
 import {Navbar} from "@/components/navbar/navbar";
 
-const fontSans = FontSans({
+const inter = Inter({
     subsets: ["latin"],
-    variable: "--font-sans",
 })
 
 export const metadata: Metadata = {
@@ -25,17 +24,21 @@ export default function RootLayout({
         <html lang="en">
         <body
             className={cn(
-                "min-h-screen bg-background font-sans antialiased",
-                fontSans.variable
+                "bg-background font-sans antialiased",
+                inter.className
             )}
         >
         <SessionProvider>
             <TanstackQueryProvider>
-                <Navbar/>
-                {children}
+                <div className="xs:pb-[45px] relative flex min-h-screen flex-col">
+                    <div className="main bg-white" vaul-drawer-wrapper="" style={{height: 'calc(100dvh - 4rem - 20px)'}}>
+                        {children}
+                    </div>
+                    <Navbar/>
+                </div>
             </TanstackQueryProvider>
         </SessionProvider>
         </body>
         </html>
-    );
+);
 }

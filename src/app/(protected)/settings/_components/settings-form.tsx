@@ -176,7 +176,7 @@ export default function SettingsForm() {
                           render={({ field }) => (
                               <FormItem className="">
                                   <div
-                                      className={'flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'}>
+                                      className={'flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm space-x-1'}>
                                       <div className="space-y-0.5">
                                           <FormLabel>Two Factor Authentication</FormLabel>
                                           <FormDescription>
@@ -202,6 +202,7 @@ export default function SettingsForm() {
               <Button
                   disabled={isPending}
                   type="submit"
+                  className='w-full md:w-auto'
               >
                   Save
               </Button>

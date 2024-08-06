@@ -1,12 +1,12 @@
 import {drizzle} from "drizzle-orm/mysql2";
-import {createConnection} from "mysql2";
+import {createConnection, createPool} from "mysql2";
 import * as auth from "./schemas/auth";
 
 export const schema = {
     ...auth
 }
 
-const connection = createConnection({
+const connection = createPool({
     host: process.env.PROD == 'true' ? 'db' : 'localhost',
     port: 3306,
     user: process.env.MYSQL_USER!,

@@ -6,6 +6,6 @@ export default async function Home() {
 
   return (
 
-    <h1>Response: {JSON.stringify(res)}</h1>
+    <h1>Hello word</h1>
   );
 }

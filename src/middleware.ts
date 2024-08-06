@@ -7,11 +7,16 @@ import {
     authRoutes,
     publicRoutes,
 } from "@/routes";
+import {NextResponse} from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 // @ts-ignore
 export default auth((req) => {
+    // set the current path
+    const headers = new Headers(req.headers);
+    headers.set("x-current-path", req.nextUrl.pathname);
+
     const { nextUrl } = req;
     const isLoggedIn = !!req.auth;
 
@@ -20,14 +25,14 @@ export default auth((req) => {
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
     if (isApiAuthRoute) {
-        return null;
+        return NextResponse.next({ headers });
     }
 
     if (isAuthRoute) {
         if (isLoggedIn) {
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
         }
-        return null;
+        return NextResponse.next({ headers });
     }
 
     if (!isLoggedIn && !isPublicRoute) {
@@ -43,6 +48,8 @@ export default auth((req) => {
             nextUrl
         ));
     }
+
+    return NextResponse.next({ headers });
 })
 
 // Optionally, don't invoke Middleware on some paths

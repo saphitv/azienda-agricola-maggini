@@ -81,19 +81,18 @@ export const LoginForm = () => {
     };
 
     return (
+        <>
         <CardWrapper
             headerLabel="Welcome back"
-            backButtonLabel="Don't have an account?"
-            backButtonHref="/register"
             showSocial
             title={"🔐 Login"}
         >
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6"
+                    className="space-y-3.5"
                 >
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                         {showTwoFactor && (
                             <FormField
                                 control={form.control}
@@ -184,6 +183,7 @@ export const LoginForm = () => {
                     </Button>
                 </form>
             </Form>
-        </CardWrapper>
+    </CardWrapper>
+    </>
     );
 };

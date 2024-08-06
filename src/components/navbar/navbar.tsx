@@ -1,41 +1,68 @@
-import {Navigationmenu} from "@/components/navbar/navigation-menu";
-import {Separator} from "@/components/ui/separator";
 import {UserButton} from "@/components/auth/user-button";
-import NavbarLogo from "@/components/navbar/navbar-logo";
+import {Icons} from "@/lib/icons";
+import {currentUser} from "@/lib/auth/auth";
+import {headers} from "next/headers";
+import {NavbarItem} from "@/components/navbar/navbar-item";
 
-export function Navbar() {
+
+const navbarItems = [
+        {
+            title: "Home",
+            href: "/",
+            icon: Icons.home,
+            mustBeAuthenticated: true,
+        },
+        {
+            title: "Lavori",
+            href: '/work',
+            icon: Icons.work,
+            mustBeAuthenticated: true
+        },
+        {
+            title: "Cerca",
+            href: '/work',
+            icon: Icons.search,
+            mustBeAuthenticated: true
+        },
+        {
+            title: "Login",
+            href: "/login",
+            mustBeAuthenticated: false,
+            icon: Icons.login,
+        },
+        {
+            title: "Register",
+            href: "/register",
+            mustBeAuthenticated: false,
+            icon: Icons.register,
+        },
+    ]
+
+export async function Navbar() {
+    const user = await currentUser()
     return (
-        <>
-        <div className="bg-white shadow sticky top-0 z-30">
-            <div className="px-2 sm:px-4">
-                <div className="flex h-16 justify-between items-center">
-                    <div className="flex px-2 items-center">
-                        <div className="flex flex-shrink-0 items-center text-xl aspect-square mr-2">
-                            <NavbarLogo/>
-                        </div>
-                        <Separator orientation={'vertical'} className="min-h-8 mr-2"/>
-                        <div>
-                            <Navigationmenu/>
-                        </div>
-
-                    </div>
-
-
-                    <div className="flex items-center justify-center space-x-4 px-4">
-
-                        <div className="flex justify-center">
-
-                            <UserButton withoutText={true}/>
-                        </div>
-                    </div>
-
-
+        <div className="fixed bottom-0 z-40 w-full border-t bg-background pb-[20px] md:pb-0">
+            <div className="flex h-16 w-full space-x-4 sm:space-x-2">
+                <div className="flex w-full gap-6 md:gap-10">
+                    {navbarItems?.length ? (
+                        <nav className="flex w-full">
+                            {navbarItems?.filter((i) => i.mustBeAuthenticated == !!user?.id)?.map(
+                                (item, index) =>
+                                    item.href && (
+                                        <NavbarItem key={item.href} item={{
+                                            ...item,
+                                            icon: <item.icon className="h-5 w-5"/>
+                                        }} />
+                                    )
+                            )}
+                            <div className='w-full flex items-center justify-center m-1'>
+                            <UserButton withoutText/>
+                            </div>
+                        </nav>
+                    ) : null}
                 </div>
             </div>
-
-
         </div>
-        </>
     )
 }
 
