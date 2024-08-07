@@ -3,40 +3,42 @@ import {Icons} from "@/lib/icons";
 import {currentUser} from "@/lib/auth/auth";
 import {headers} from "next/headers";
 import {NavbarItem} from "@/components/navbar/navbar-item";
+import {Suspense} from "react";
+import {Skeleton} from "@/components/ui/skeleton";
 
 
 const navbarItems = [
-        {
-            title: "Home",
-            href: "/",
-            icon: Icons.home,
-            mustBeAuthenticated: true,
-        },
-        {
-            title: "Lavori",
-            href: '/work',
-            icon: Icons.work,
-            mustBeAuthenticated: true
-        },
-        {
-            title: "Cerca",
-            href: '/work',
-            icon: Icons.search,
-            mustBeAuthenticated: true
-        },
-        {
-            title: "Login",
-            href: "/login",
-            mustBeAuthenticated: false,
-            icon: Icons.login,
-        },
-        {
-            title: "Register",
-            href: "/register",
-            mustBeAuthenticated: false,
-            icon: Icons.register,
-        },
-    ]
+    {
+        title: "Home",
+        href: "/",
+        icon: Icons.home,
+        mustBeAuthenticated: true,
+    },
+    {
+        title: "Lavori",
+        href: '/work',
+        icon: Icons.work,
+        mustBeAuthenticated: true
+    },
+    {
+        title: "Cerca",
+        href: '/work',
+        icon: Icons.search,
+        mustBeAuthenticated: true
+    },
+    {
+        title: "Login",
+        href: "/login",
+        mustBeAuthenticated: false,
+        icon: Icons.login,
+    },
+    {
+        title: "Register",
+        href: "/register",
+        mustBeAuthenticated: false,
+        icon: Icons.register,
+    },
+]
 
 export async function Navbar() {
     const user = await currentUser()
@@ -52,11 +54,11 @@ export async function Navbar() {
                                         <NavbarItem key={item.href} item={{
                                             ...item,
                                             icon: <item.icon className="h-5 w-5"/>
-                                        }} />
+                                        }}/>
                                     )
                             )}
                             <div className='w-full flex items-center justify-center m-1'>
-                            <UserButton withoutText/>
+                                <UserButton withoutText/>
                             </div>
                         </nav>
                     ) : null}

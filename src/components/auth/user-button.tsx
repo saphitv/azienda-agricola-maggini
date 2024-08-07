@@ -19,12 +19,13 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {ShoppingBagIcon} from "lucide-react";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export const UserButton = ({withoutText}: {withoutText?: boolean}) => {
     const user = useCurrentUser();
     const router = useRouter();
 
-    if(!user?.id) return null
+    if(!user?.id) return <Skeleton className="w-[40px] h-[40px] rounded-full" />
 
     return (
         <DropdownMenu>
