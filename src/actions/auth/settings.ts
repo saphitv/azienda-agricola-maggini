@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { unstable_update } from "@/auth";
 import {db} from "@/lib/db";
 import {SettingsSchema} from "@/schemas/auth";
-import {getUserByEmail, getUserById} from "@/lib/http-db/utils/user";
+import {getUserByEmail, getUserById} from "@/lib/http-db/utils/auth/user";
 import {currentUser} from "@/lib/auth/auth";
 import {generateVerificationToken} from "@/lib/auth/tokens";
 import {sendVerificationEmail} from "@/lib/mail";

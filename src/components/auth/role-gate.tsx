@@ -10,16 +10,19 @@ import {LockIcon} from "lucide-react";
 interface RoleGateProps {
     children: React.ReactNode;
     allowedRole: UserRole;
+    displayPermission?: boolean
 }
 
 export const RoleGate = ({
                              children,
                              allowedRole,
+                             displayPermission = false
                          }: RoleGateProps) => {
     const role = useCurrentRole();
 
     if (role !== allowedRole) {
-        return (
+        if(displayPermission)
+            return (
             <>
                 <NoPermission/>
                 <Button>
@@ -28,6 +31,8 @@ export const RoleGate = ({
             </>
 
         )
+        else
+            return null
     }
 
     return (

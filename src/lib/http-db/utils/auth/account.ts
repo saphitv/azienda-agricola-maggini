@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/http-db";
 import {accounts} from "@/lib/db/schemas/auth";
 import {eq} from "drizzle-orm";
 

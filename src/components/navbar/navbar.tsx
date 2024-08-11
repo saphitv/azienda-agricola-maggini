@@ -22,7 +22,7 @@ const navbarItems = [
     },
     {
         title: "Cerca",
-        href: '/work',
+        href: '/search',
         icon: Icons.search,
         mustBeAuthenticated: true
     },
@@ -43,7 +43,7 @@ const navbarItems = [
 export async function Navbar() {
     const user = await currentUser()
     return (
-        <div className="fixed bottom-0 z-40 w-full border-t bg-background pb-[20px] md:pb-0">
+        <div className="fixed bottom-0 z-40 w-full border-t bg-background pb-[5px] md:pb-0">
             <div className="flex h-16 w-full space-x-4 sm:space-x-2">
                 <div className="flex w-full gap-6 md:gap-10">
                     {navbarItems?.length ? (
@@ -57,9 +57,11 @@ export async function Navbar() {
                                         }}/>
                                     )
                             )}
+                            {!!user?.id &&
                             <div className='w-full flex items-center justify-center m-1'>
                                 <UserButton withoutText/>
                             </div>
+                            }
                         </nav>
                     ) : null}
                 </div>

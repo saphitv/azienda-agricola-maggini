@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
 import { RegisterSchema } from "@/schemas/auth";
-import { getUserByEmail } from "@/lib/http-db/utils/user";
+import { getUserByEmail } from "@/lib/http-db/utils/auth/user";
 import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/auth/tokens";
 import {users} from "@/lib/db/schemas/auth";

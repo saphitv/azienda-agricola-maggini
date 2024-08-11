@@ -3,7 +3,7 @@
 import * as z from "zod";
 
 import { ResetSchema } from "@/schemas/auth";
-import { getUserByEmail } from "@/lib/http-db/utils/user";
+import { getUserByEmail } from "@/lib/http-db/utils/auth/user";
 import { sendPasswordResetEmail } from "@/lib/mail";
 import { generatePasswordResetToken } from "@/lib/auth/tokens";
 

@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 
 import {db} from "@/lib/db";
 import authConfig from "@/auth.config";
-import {getUserById} from "@/lib/http-db/utils/user";
+import {getUserById} from "@/lib/db/utils/auth/user";
 import {getTwoFactorConfirmationByUserId} from "@/lib/db/utils/auth/two-factor-confirmation";
 import {getAccountByUserId} from "@/lib/db/utils/auth/account";
 import {DrizzleAdapter} from "@auth/drizzle-adapter";

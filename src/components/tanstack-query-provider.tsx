@@ -13,6 +13,10 @@ declare module '@tanstack/react-query' {
 
 export function TanstackQueryProvider({children}: { children: ReactNode}){
     const [queryClient] = useState(new QueryClient({
+        defaultOptions: {
+            queries: {
+            }
+        },
         mutationCache: new MutationCache({
             onSuccess: (data, _variables, _context, mutation) => {
                 void  queryClient.invalidateQueries({
