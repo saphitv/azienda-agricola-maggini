@@ -1,13 +1,16 @@
 "use client"
 import {columns} from "@/app/(protected)/search/_components/columns";
-import {LoaderCircle} from "lucide-react";
+import {Download, LoaderCircle} from "lucide-react";
 import {DataTable} from "@/app/(protected)/search/_components/data-table";
-import {useWorks, useWorksFiltered, worksIdFilteredOptions} from "@/hooks/use-work";
-import {useActivities} from "@/hooks/use-activity";
+import {useWorksFiltered} from "@/hooks/use-work";
 import {useEffect, useState} from "react";
 import {PaginationState, SortingState} from "@tanstack/table-core";
 import {SEARCH_DEFAULT_PAGE, SEARCH_DEFAULT_PAGE_SIZE} from "@/lib/settings";
 import {ColumnFiltersState} from "@tanstack/react-table";
+import {Button} from "@/components/ui/button";
+import {PDFLavori} from "@/app/(protected)/search/_components/pdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import {DateTime} from "luxon";
 
 
 export default function Page() {
@@ -23,8 +26,13 @@ export default function Page() {
     const {data, isPending, rowCount} = useWorksFiltered({
         ...paginationState,
         sorting,
-        filterValue: columnFilters.filter((value, index) => value.id == 'name')[0]?.value as string ?? ""
+        filterValue: columnFilters.filter((value, index) => value.id == 'name')[0]?.value as string ?? "",
+        dateFilterValues: columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any,
     })
+
+    console.log( columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any)
+
+    const {start = DateTime.now().startOf('month'), end = DateTime.now().endOf('month')} = columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any ?? {}
 
 
     const [isClient, setIsClient] = useState(false)
@@ -39,10 +47,22 @@ export default function Page() {
         </div>
     )
 
+    console.log(start, end, columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any)
+
     return (
-        <div className='p-2 py-4'>
-            <div className='flex items-center gap-2 ml-2'>
-                <h4 className='scroll-m-20 text-xl font-bold tracking-tight'>I miei Lavori</h4>
+        <div className='p-2 py-4 overflow-y-auto'>
+            <div className='flex items-center gap-2 ml-2 justify-between'>
+                <h4 className='scroll-m-20 text-xl font-bold tracking-tight'>Cerca lavori</h4>
+                <PDFDownloadLink
+                    fileName={`Lavori ${start.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})} - ${end.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})}`}
+                    document={<PDFLavori
+                        data={data}
+                        startdate={start}
+                        enddate={end}/>}
+                >
+                    <Button variant='secondary'><Download className='w-5 h-5 mr-3'/>Scarica PDF</Button>
+                </PDFDownloadLink>
+
             </div>
             <DataTable
                 columns={columns}

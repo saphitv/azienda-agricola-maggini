@@ -23,7 +23,7 @@ export default function Page() {
     )
 
     return (
-        <div className='p-2 py-4'>
+        <div className='p-2 py-4 overflow-y-auto'>
             <div className='flex items-center gap-2 ml-2'>
                 <h4 className='scroll-m-20 text-xl font-bold tracking-tight'>I miei Lavori</h4>
             </div>

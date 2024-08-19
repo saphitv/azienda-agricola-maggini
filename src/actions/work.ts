@@ -1,11 +1,13 @@
 "use server"
 import {db} from "@/lib/db";
 import {works} from "@/lib/db/schemas/general";
-import {and, asc, count, desc, eq, InferInsertModel, InferSelectModel, like, or, sql} from "drizzle-orm";
+import {and, asc, count, desc, eq, gt, InferInsertModel, InferSelectModel, like, lt, or, sql} from "drizzle-orm";
 import {currentUser} from "@/lib/auth/auth";
 import {WorkFilters} from "@/hooks/use-work";
 import {PaginatedData} from "@/types/table";
 import {SEARCH_DEFAULT_PAGE, SEARCH_DEFAULT_PAGE_SIZE} from "@/lib/settings";
+import {SortingState} from "@tanstack/table-core";
+import {DateTime} from "luxon";
 
 export type Work = {
     id: number;
@@ -40,20 +42,41 @@ export const getAllWorkId = async (): Promise<{id: number}[]> => {
     return db.select({id: works.id}).from(works).orderBy(works.day)
 }
 
-export const getWorksIdFiltered = async (filtersAndPagination: WorkFilters) => {
+export const getWorksIdFiltered = async (filtersAndPagination: {
+    hour?: number;
+    filterValue?: string;
+    pageIndex?: number;
+    sorting?: SortingState;
+    name?: string;
+    activity_id?: number | null;
+    description?: string | null;
+    pageSize?: number;
+    id?: number;
+    day?: Date;
+    dateFilterValues: { start: string | null | undefined; end: string | null | undefined }
+}) => {
     console.log('get works filtered', filtersAndPagination)
     const {
         pageIndex = SEARCH_DEFAULT_PAGE,
         pageSize = SEARCH_DEFAULT_PAGE_SIZE,
         sorting,
-        filterValue
+        filterValue,
+        dateFilterValues
     } = filtersAndPagination
 
     const allData = db.$with('allData').as(
-        db.select({id: works.id, day: works.day}).from(works).where(or(
-            or(like(works.nome, `%${filterValue}%`), like(works.description, `%${filterValue}%`),),
-            sql`${filterValue ?? ""} = ''`
-        ))
+        db.select({id: works.id, day: works.day}).from(works).where(
+            and(
+                or(
+                    or(like(works.nome, `%${filterValue}%`), like(works.description, `%${filterValue}%`),),
+                    sql`${filterValue ?? ""} = ''`
+                ),
+                and(
+                    gt(works.day, dateFilterValues.start ? DateTime.fromHTTP(dateFilterValues.start).toJSDate() : DateTime.now().startOf('month').toJSDate()),
+                    lt(works.day, dateFilterValues.end ? DateTime.fromHTTP(dateFilterValues.end).toJSDate() : DateTime.now().endOf('month').toJSDate())
+                ),
+            )
+        )
     )
 
     const cnt = db.$with('cnt').as(

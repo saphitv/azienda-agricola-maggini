@@ -1,2 +1,2 @@
 export const SEARCH_DEFAULT_PAGE = 0
-export const SEARCH_DEFAULT_PAGE_SIZE = 4
+export const SEARCH_DEFAULT_PAGE_SIZE = 8

@@ -27,7 +27,11 @@ export const columns: ColumnDef<Work>[] = [
         accessorKey: "day",
         header: "Giorno",
         cell: ({row}) => {
-            return DateTime.fromJSDate(row.getValue('day')).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})
+            return (
+                <div className='w-32'>
+                    {DateTime.fromJSDate(row.getValue('day')).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})}
+                </div>
+            )
         }
     },
     {
@@ -51,7 +55,10 @@ export const columns: ColumnDef<Work>[] = [
     },
     {
         header: "Descrizione",
-        accessorKey: 'description'
+        accessorKey: 'description',
+        cell: ({row}) => (
+            <div className={'w-60'}>{row.getValue('description')}</div>
+        )
     },
     {
         header: "Azioni",

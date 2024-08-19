@@ -1,6 +1,6 @@
 "use client"
 
-import {ColumnDef, FilterFn} from "@tanstack/react-table"
+import {ColumnDef, FilterFn, Row} from "@tanstack/react-table"
 import {useActivityById} from "@/hooks/use-activity";
 import {Work} from "@/actions/work";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
@@ -17,6 +17,19 @@ const filterFunction: FilterFn<Work> = (row, columnId, filterValue) => {
     // Perform a case-insensitive comparison
     return searchableRowContent.toLowerCase().includes(filterValue.toLowerCase());
 }
+
+const filterDateFn: FilterFn<Work> = (row, columnId, filterValue, addMeta) => {
+    console.log("filter function")
+    const {start, end} = filterValue as { start?: DateTime, end?: DateTime}
+
+    if(start && start.diff(DateTime.fromJSDate(row.original.day)).toMillis() < 0) return false
+
+    if(end && end.diff(DateTime.fromJSDate(row.original.day)).toMillis() > 0) return false
+
+    return true
+
+}
+
 
 export const columns: ColumnDef<Work>[] = [
     {
@@ -41,8 +54,20 @@ export const columns: ColumnDef<Work>[] = [
 
             if(!day) return 'Loading ...'
 
-            return DateTime.fromJSDate(day).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})
-        }
+            return (
+                <div className='w-32'>
+                    {DateTime.fromJSDate(row.getValue('day')).toLocaleString({
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hourCycle: "h24"
+                    })}
+                </div>
+            )
+        },
+        filterFn: filterDateFn
     },
     {
         accessorKey: "hour",
@@ -51,7 +76,7 @@ export const columns: ColumnDef<Work>[] = [
     {
         accessorKey: "activity_id",
         header: "Attività",
-        cell: ({ row}) => {
+        cell: ({row}) => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const { data } = useActivityById(row.getValue('activity_id'))
 
@@ -65,7 +90,10 @@ export const columns: ColumnDef<Work>[] = [
     },
     {
         header: "Descrizione",
-        accessorKey: 'description'
+        accessorKey: 'description',
+        cell: ({row}) => (
+            <div className={'w-60'}>{row.getValue('description')}</div>
+        )
     },
     {
         header: "Azioni",

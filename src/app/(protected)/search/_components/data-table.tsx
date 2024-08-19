@@ -5,19 +5,17 @@ import {
     ColumnFiltersState,
     flexRender,
     getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel, getSortedRowModel, SortingFn,
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
-import {Dispatch, SetStateAction, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
-import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
-import {FormWork} from "@/app/(protected)/work/_components/form-work";
 import {PaginationState, SortingState} from "@tanstack/table-core";
+import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
+import {DateTime} from "luxon";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -31,6 +29,11 @@ interface DataTableProps<TData, TValue> {
     setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>
 }
 
+export type exportFilters = {
+    start: DateTime | undefined,
+    end:  DateTime | undefined,
+}
+
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
@@ -39,8 +42,15 @@ export function DataTable<TData, TValue>({
                                              sorting, setSorting,
                                              columnFilters, setColumnFilters
                                          }: DataTableProps<TData, TValue>) {
+    const [filterDates, setFilterDates] = useState<exportFilters>({
+        start: DateTime.now().startOf('month'),
+        end: DateTime.now().endOf('month')
+    })
+
     const [columnVisibility, setColumnVisibility] =
         useState<VisibilityState>({"id": false})
+
+
 
 
     const table = useReactTable({
@@ -70,18 +80,24 @@ export function DataTable<TData, TValue>({
         }
     })
 
+    useEffect(() => {
+        table.getColumn('day')?.setFilterValue(filterDates)
+        console.log(filterDates.start?.toJSDate(), filterDates.end?.toJSDate(), table.getColumn('day'), table.getColumn('day')?.getFilterValue())
+    }, [filterDates])
+
 
     return (
-        <div>
-            <div className="flex items-center py-4 space-x-2">
+        <div className='h-full'>
+            <div className="flex flex-col items-center py-4 space-y-2">
                 <Input
                     placeholder="Filtra per nome o descrizione"
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn("name")?.setFilterValue(event.target.value)
                     }
-                    className="max-w-sm"
+                    className="w-full"
                 />
+                <DatePickerPreset dates={filterDates} setDates={setFilterDates} />
                 {/*<DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
@@ -111,7 +127,7 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuContent>
                 </DropdownMenu>
                 */}
-                <Drawer>
+                {/*<Drawer>
                     <DrawerTrigger asChild>
                         <Button>Crea Lavoro</Button>
                     </DrawerTrigger>
@@ -119,7 +135,7 @@ export function DataTable<TData, TValue>({
                     <DrawerContent>
                         <FormWork/>
                     </DrawerContent>
-                </Drawer>
+                </Drawer>*/}
             </div>
             <div className="rounded-md border">
                 <Table>

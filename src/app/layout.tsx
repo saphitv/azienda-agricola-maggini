@@ -37,7 +37,7 @@ export default function RootLayout({
             <TanstackQueryProvider>
                 <Toaster richColors={true} position={'top-center'} theme={'light'}/>
                 <div className="xs:pb-[45px] relative flex min-h-screen flex-col">
-                    <div className="main bg-white" vaul-drawer-wrapper="" style={{height: 'calc(100dvh - 4rem - 20px)'}}>
+                    <div className="main bg-white overflow-y-auto" vaul-drawer-wrapper="" style={{height: 'calc(100dvh - 4rem - 20px)'}}>
                         {children}
                     </div>
                     <Navbar/>
