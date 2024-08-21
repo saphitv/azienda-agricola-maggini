@@ -16,6 +16,7 @@ import {Input} from "@/components/ui/input";
 import {PaginationState, SortingState} from "@tanstack/table-core";
 import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
 import {DateTime} from "luxon";
+import {SelectUsers} from "@/app/(protected)/search/_components/select-users";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -26,7 +27,10 @@ interface DataTableProps<TData, TValue> {
     sorting: SortingState,
     setSorting: Dispatch<SetStateAction<SortingState>>
     columnFilters: ColumnFiltersState,
-    setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>
+    setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>,
+    usersFilters: string[],
+    setUsersFilters: Dispatch<SetStateAction<string[]>>,
+    users: { id: string, username: string | null }[]
 }
 
 export type exportFilters = {
@@ -35,12 +39,13 @@ export type exportFilters = {
 }
 
 export function DataTable<TData, TValue>({
-                                             columns,
-                                             data,
-                                             rowCount,
-                                             setPaginationState, paginationState,
-                                             sorting, setSorting,
-                                             columnFilters, setColumnFilters
+                                            columns,
+                                            data,
+                                            rowCount,
+                                            setPaginationState, paginationState,
+                                            sorting, setSorting,
+                                            columnFilters, setColumnFilters,
+                                            usersFilters, users, setUsersFilters
                                          }: DataTableProps<TData, TValue>) {
     const [filterDates, setFilterDates] = useState<exportFilters>({
         start: DateTime.now().startOf('month'),
@@ -98,6 +103,7 @@ export function DataTable<TData, TValue>({
                     className="w-full"
                 />
                 <DatePickerPreset dates={filterDates} setDates={setFilterDates} />
+                <SelectUsers usersFilters={usersFilters} setUsersFilters={setUsersFilters} users={users} />
                 {/*<DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">

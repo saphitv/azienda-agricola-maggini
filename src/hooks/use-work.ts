@@ -27,6 +27,7 @@ export const worksIdOptions = () => {
 
 
 export const worksIdFilteredOptions = (filters: WorkFilters) => {
+    console.log(filters)
     return queryOptions({
         queryKey: ['works', filters],
         queryFn: () => getWorksIdFiltered({
@@ -34,7 +35,8 @@ export const worksIdFilteredOptions = (filters: WorkFilters) => {
             dateFilterValues: {
                 start: filters.dateFilterValues?.start?.toHTTP(),
                 end: filters.dateFilterValues?.end?.toHTTP(),
-            }
+            },
+            usersFilter: filters.usersFilter ?? []
         }),
         placeholderData: keepPreviousData
     })

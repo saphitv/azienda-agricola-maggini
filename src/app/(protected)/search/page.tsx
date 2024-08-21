@@ -11,6 +11,7 @@ import {Button} from "@/components/ui/button";
 import {PDFLavori} from "@/app/(protected)/search/_components/pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import {DateTime} from "luxon";
+import {useUsers} from "@/hooks/use-users";
 
 
 export default function Page() {
@@ -21,6 +22,8 @@ export default function Page() {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
     )
+    const {data: users} = useUsers()
+    const [usersFilters, setUsersFilters] = useState<string[ ]>([])
     const [sorting, setSorting] = useState<SortingState>([])
 
     const {data, isPending, rowCount} = useWorksFiltered({
@@ -28,9 +31,14 @@ export default function Page() {
         sorting,
         filterValue: columnFilters.filter((value, index) => value.id == 'name')[0]?.value as string ?? "",
         dateFilterValues: columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any,
+        usersFilter: (users ?? [])
+            .filter(user => usersFilters.length == 0 || usersFilters.includes(user.id))
+            .map(user => user.id)
     })
 
-    console.log( columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any)
+    useEffect(() => {
+        console.log(users)
+    }, [users]);
 
     const {start = DateTime.now().startOf('month'), end = DateTime.now().endOf('month')} = columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any ?? {}
 
@@ -46,8 +54,6 @@ export default function Page() {
             <LoaderCircle className='animate-spin text-slate-300 w-10 h-10'/>
         </div>
     )
-
-    console.log(start, end, columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any)
 
     return (
         <div className='p-2 py-4 overflow-y-auto'>
@@ -71,6 +77,7 @@ export default function Page() {
                 paginationState={paginationState} setPaginationState={setPaginationState}
                 sorting={sorting} setSorting={setSorting}
                 columnFilters={columnFilters} setColumnFilters={setColumnFilters}
+                usersFilters={usersFilters} setUsersFilters={setUsersFilters} users={users ?? []}
             />
         </div>
 

@@ -8,6 +8,8 @@ import {PaginatedData} from "@/types/table";
 import {SEARCH_DEFAULT_PAGE, SEARCH_DEFAULT_PAGE_SIZE} from "@/lib/settings";
 import {SortingState} from "@tanstack/table-core";
 import {DateTime} from "luxon";
+import {userAgentFromString} from "next/server";
+import {inArray} from "drizzle-orm/sql/expressions/conditions";
 
 export type Work = {
     id: number;
@@ -53,7 +55,8 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
     pageSize?: number;
     id?: number;
     day?: Date;
-    dateFilterValues: { start: string | null | undefined; end: string | null | undefined }
+    dateFilterValues: { start: string | null | undefined; end: string | null | undefined },
+    usersFilter: string[]
 }) => {
     console.log('get works filtered', filtersAndPagination)
     const {
@@ -61,7 +64,8 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
         pageSize = SEARCH_DEFAULT_PAGE_SIZE,
         sorting,
         filterValue,
-        dateFilterValues
+        dateFilterValues,
+        usersFilter
     } = filtersAndPagination
 
     const allData = db.$with('allData').as(
@@ -75,6 +79,10 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
                     gt(works.day, dateFilterValues.start ? DateTime.fromHTTP(dateFilterValues.start).toJSDate() : DateTime.now().startOf('month').toJSDate()),
                     lt(works.day, dateFilterValues.end ? DateTime.fromHTTP(dateFilterValues.end).toJSDate() : DateTime.now().endOf('month').toJSDate())
                 ),
+                or(
+                    sql`${usersFilter.length} = 0`,
+                    inArray(works.user_id, usersFilter)
+                )
             )
         )
     )
