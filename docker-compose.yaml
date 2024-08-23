@@ -1,7 +1,4 @@
-version: '0.01'
-
 name: azienda-agricola-maggini
-
 services:
   web:
     env_file:
