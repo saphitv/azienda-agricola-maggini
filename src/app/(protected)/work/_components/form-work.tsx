@@ -60,11 +60,12 @@ export const FormWork = ({work}: {
         }
     })
 
-    const { category_id } = form.watch()
+    const { category_id, activity_id } = form.watch()
 
     useEffect(() => {
-        form.setValue("activity_id", null)
-    }, [category_id])
+        if(activities.find(act => act.id == activity_id)?.category_id != category_id)
+            form.setValue("activity_id", null)
+    }, [category_id, activity_id])
 
 
     const onSubmit = (values: z.infer<typeof workSchema>) => {
@@ -159,7 +160,6 @@ export const FormWork = ({work}: {
                                 <FormItem>
                                     <FormLabel>Attività</FormLabel>
                                     {!isPendingActivities ? <Select onValueChange={value => field.onChange(+value)} defaultValue={field.value?.toString()}>
-
 
                                     <FormControl>
                                         <SelectTrigger>
