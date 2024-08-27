@@ -14,7 +14,7 @@ export const HoursCard = () => {
 
 
     return (
-        <Card className="max-w-xs">
+        <Card className="w-full">
             <CardHeader>
                 <CardTitle>Progressi</CardTitle>
                 <CardDescription>
