@@ -24,7 +24,6 @@ export const login = async (
     values: z.infer<typeof LoginSchema>,
     callbackUrl?: string | null,
 ) => {
-    console.log("start login")
     const validatedFields = LoginSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -34,8 +33,6 @@ export const login = async (
     const { email, password, code } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
-
-    console.log(email, existingUser, code)
 
     if (!existingUser || !existingUser.email || !existingUser.password) {
         return { error: "Email does not exist!" }
@@ -47,9 +44,7 @@ export const login = async (
             existingUser.email,
         );
 
-        console.log(verificationToken)
         const t = await db.query.verificationTokens.findMany()
-        console.log(t)
 
         if(!verificationToken) return { error: "Something went wrong!" };
 
@@ -67,7 +62,6 @@ export const login = async (
     if (existingUser.isTwoFactorEnabled && existingUser.email) {
         // se c'è il codice 2fa
         if (code && code != "") {
-            console.log("validating code")
             const twoFactorToken = await getTwoFactorTokenByEmail(
                 existingUser.email
             );
@@ -103,7 +97,6 @@ export const login = async (
             }).execute();
 
         } else {
-            console.log("creating code")
             // se non c'è il codice lo invia per email
             const twoFactorToken = await generateTwoFactorToken(existingUser.email)
             await sendTwoFactorTokenEmail(

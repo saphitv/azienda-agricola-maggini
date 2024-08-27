@@ -51,12 +51,9 @@ export const LoginForm = () => {
         setSuccess("");
 
         startTransition(async () => {
-            console.log("values", values)
-
             try {
                 const data = await login(values, callbackUrl)
 
-                console.log("data", data)
                 if (data?.error) {
                     form.resetField('code')
                     setError(data.error);

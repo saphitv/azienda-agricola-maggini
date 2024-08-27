@@ -34,7 +34,6 @@ export const FormCategoria = ({category}: {
 
 
     const onSubmit = (values: z.infer<typeof categorySchema>) => {
-        console.log("submit", values)
         mutate({ id: category?.id, nome: values.name, color: values.color})
 
     }

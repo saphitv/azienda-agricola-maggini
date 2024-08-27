@@ -1,6 +1,6 @@
 "use server"
 import {db} from "@/lib/db";
-import {works} from "@/lib/db/schemas/general";
+import {activities, works} from "@/lib/db/schemas/general";
 import {and, asc, count, desc, eq, gt, InferInsertModel, InferSelectModel, like, lt, or, sql} from "drizzle-orm";
 import {currentUser} from "@/lib/auth/auth";
 import {WorkFilters} from "@/hooks/use-work";
@@ -18,6 +18,7 @@ export type Work = {
     day: Date;
     hour: number;
     activity_id: number | null;
+    user_id: string
 }
 
 
@@ -32,6 +33,7 @@ export const getWorkById = async (id: number): Promise<Work | undefined> => {
         day: works.day,
         hour: works.ore,
         activity_id: works.activity_id,
+            user_id: works.user_id
     }).from(works)
     //    .innerJoin(activitySchema, eq(activitySchema.id, workSchema.activity_id))
         .where(eq(works.id, id))
@@ -41,7 +43,7 @@ export const getWorkById = async (id: number): Promise<Work | undefined> => {
 }
 
 export const getAllWorkId = async (): Promise<{id: number}[]> => {
-    return db.select({id: works.id}).from(works).orderBy(works.day)
+    return db.select({id: works.id}).from(works).orderBy(desc(works.day))
 }
 
 export const getWorksIdFiltered = async (filtersAndPagination: {
@@ -56,20 +58,24 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
     id?: number;
     day?: Date;
     dateFilterValues: { start: string | null | undefined; end: string | null | undefined },
-    usersFilter: string[]
+    usersFilter: string[],
+    categoryFilter: number[]
 }) => {
-    console.log('get works filtered', filtersAndPagination)
     const {
         pageIndex = SEARCH_DEFAULT_PAGE,
         pageSize = SEARCH_DEFAULT_PAGE_SIZE,
         sorting,
         filterValue,
         dateFilterValues,
-        usersFilter
+        usersFilter,
+        categoryFilter
     } = filtersAndPagination
 
     const allData = db.$with('allData').as(
-        db.select({id: works.id, day: works.day}).from(works).where(
+        db.select({id: works.id, day: works.day})
+            .from(works)
+            .innerJoin(activities, eq(activities.id, works.activity_id))
+            .where(
             and(
                 or(
                     or(like(works.nome, `%${filterValue}%`), like(works.description, `%${filterValue}%`),),
@@ -82,6 +88,10 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
                 or(
                     sql`${usersFilter.length} = 0`,
                     inArray(works.user_id, usersFilter)
+                ),
+                or(
+                    sql`${categoryFilter.length} = 0`,
+                    inArray(activities.category_id, categoryFilter)
                 )
             )
         )
@@ -105,7 +115,7 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
     }
 }
 
-
+/*
 export const getAllWorks: (month: string, user_id: string | null) => Promise<Work[]> = async (month, user_id) => {
     return db.select({
         id: works.id,
@@ -125,7 +135,7 @@ export const getAllWorks: (month: string, user_id: string | null) => Promise<Wor
                 sql`date_format(aam_work.day, '%m.%y') = ${month}`
             )
         )
-        .orderBy(asc(works.day));
+        .orderBy(desc(works.day));
 }
 
 export const getSearchWorks: (user_id: number, search: string) => Promise<Work[]> = async (user_id, search) => {
@@ -150,13 +160,16 @@ export const getSearchWorks: (user_id: number, search: string) => Promise<Work[]
         .orderBy(asc(works.day));
 }
 
+*/
 
-
-export const upsertWork = async (work: NewWork) => {
+export const upsertWork = async (work: Omit<NewWork, 'user_id'>) => {
     const user = await currentUser()
+
+    if(!user?.id) return new Error("Not authenticated")
+
     await db.insert(works).values({
         id: work.id,
-        user_id: user?.id,
+        user_id: user.id,
         nome: work.nome,
         activity_id: work.activity_id,
         description: work.description,

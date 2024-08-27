@@ -27,7 +27,6 @@ export const worksIdOptions = () => {
 
 
 export const worksIdFilteredOptions = (filters: WorkFilters) => {
-    console.log(filters)
     return queryOptions({
         queryKey: ['works', filters],
         queryFn: () => getWorksIdFiltered({
@@ -36,7 +35,8 @@ export const worksIdFilteredOptions = (filters: WorkFilters) => {
                 start: filters.dateFilterValues?.start?.toHTTP(),
                 end: filters.dateFilterValues?.end?.toHTTP(),
             },
-            usersFilter: filters.usersFilter ?? []
+            usersFilter: filters.usersFilter ?? [],
+            categoryFilter: filters.categoryFilter ?? []
         }),
         placeholderData: keepPreviousData
     })
@@ -82,7 +82,7 @@ export const useWorks = () => {
 export const useUpsertWork = (id?: number) => {
     return useMutation({
         mutationKey: ["work", "upsert", id],
-        mutationFn: (work: NewWork) => upsertWork(work),
+        mutationFn: (work: Omit<NewWork, 'user_id'>) => upsertWork(work),
         meta: {
             invalidates: [
                 ['works'],

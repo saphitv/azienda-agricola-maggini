@@ -36,7 +36,6 @@ export const FormActivity = ({activity}: {
 
 
     const onSubmit = (values: z.infer<typeof activitySchema>) => {
-        console.log("submit", values)
         mutate({ id: activity?.id, nome: values.name, category_id: values.category_id})
     }
 
@@ -79,7 +78,14 @@ export const FormActivity = ({activity}: {
                                     </FormControl>
                                         <SelectContent>
                                             {categories.map(category => (
-                                                <SelectItem value={category?.id?.toString()} key={category?.id?.toString()}>{category?.nome}</SelectItem>
+                                                <SelectItem value={category?.id?.toString()}
+                                                            key={category?.id?.toString()}>
+                                                    <div className={'flex items-center gap-2'}>
+                                                        <div className='w-4 h-4 rounded-full'
+                                                             style={{background: category?.color}}></div>
+                                                        {category?.nome}
+                                                    </div>
+                                                </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select> : <Skeleton className='w-full h-10'/>}

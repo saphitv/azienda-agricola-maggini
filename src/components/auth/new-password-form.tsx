@@ -53,8 +53,6 @@ export const NewPasswordForm = () => {
     return (
         <CardWrapper
             headerLabel="Enter a new password"
-            backButtonLabel="Back to login"
-            backButtonHref="/login"
             title='🔐 New Password'
         >
             <Form {...form}>

@@ -13,6 +13,7 @@ export const getAllActivitiesId = async (): Promise<{id: number}[]> => {
             id: activities.id,
         })
         .from(activities)
+        .orderBy(activities.category_id, activities.nome)
         //.innerJoin(categories, eq(activities.category_id, categories.id));
 }
 

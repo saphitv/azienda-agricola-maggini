@@ -9,4 +9,4 @@ export type PaginatedData<T> = {
 
 export type PaginationParams = PaginationState
 //export type SortParams = { sortBy: `${string}.${'asc' | 'desc'}` }
-export type Filters<T> = Partial<T & PaginationParams & {sorting: SortingState} & {  filterValue: string, dateFilterValues: exportFilters, usersFilter: string[]}>
+export type Filters<T> = Partial<T & PaginationParams & {sorting: SortingState} & {  filterValue: string, dateFilterValues: exportFilters, usersFilter: string[], categoryFilter: number[]}>

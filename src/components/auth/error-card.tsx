@@ -6,8 +6,6 @@ export const ErrorCard = () => {
     return (
         <CardWrapper
             headerLabel="Oops! Something went wrong!"
-            backButtonHref="/login"
-            backButtonLabel="Back to login"
             title="⚠️️Error"
         >
             <div className="w-full flex justify-center items-center">

@@ -17,6 +17,7 @@ import {PaginationState, SortingState} from "@tanstack/table-core";
 import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
 import {DateTime} from "luxon";
 import {SelectUsers} from "@/app/(protected)/search/_components/select-users";
+import {SelectCategory} from "@/app/(protected)/search/_components/select-category";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -31,6 +32,8 @@ interface DataTableProps<TData, TValue> {
     usersFilters: string[],
     setUsersFilters: Dispatch<SetStateAction<string[]>>,
     users: { id: string, username: string | null }[]
+    categoryFilters: number[],
+    setCategoryFilters: Dispatch<SetStateAction<number[]>>,
 }
 
 export type exportFilters = {
@@ -45,7 +48,8 @@ export function DataTable<TData, TValue>({
                                             setPaginationState, paginationState,
                                             sorting, setSorting,
                                             columnFilters, setColumnFilters,
-                                            usersFilters, users, setUsersFilters
+                                            usersFilters, users, setUsersFilters,
+                                            categoryFilters, setCategoryFilters
                                          }: DataTableProps<TData, TValue>) {
     const [filterDates, setFilterDates] = useState<exportFilters>({
         start: DateTime.now().startOf('month'),
@@ -87,7 +91,6 @@ export function DataTable<TData, TValue>({
 
     useEffect(() => {
         table.getColumn('day')?.setFilterValue(filterDates)
-        console.log(filterDates.start?.toJSDate(), filterDates.end?.toJSDate(), table.getColumn('day'), table.getColumn('day')?.getFilterValue())
     }, [filterDates])
 
 
@@ -104,6 +107,7 @@ export function DataTable<TData, TValue>({
                 />
                 <DatePickerPreset dates={filterDates} setDates={setFilterDates} />
                 <SelectUsers usersFilters={usersFilters} setUsersFilters={setUsersFilters} users={users} />
+                <SelectCategory categoryFilters={categoryFilters} setCategoryFilters={setCategoryFilters} />
                 {/*<DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
@@ -187,24 +191,31 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
+            <div className='flex items-center justify-between'>
+                <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                    Page {table.getState().pagination.pageIndex + 1} of{" "}
+                    {table.getPageCount()}
+                </div>
+                <div className=" space-x-2 py-4">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
+                </div>
             </div>
+
         </div>
     )
 }

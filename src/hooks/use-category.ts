@@ -3,10 +3,10 @@ import {queryOptions, useMutation, useQueries, useQuery, useQueryClient} from "@
 import {deleteCategory, getAllCategoryId, getCategoryById, NewCategory, upsertCategory} from "@/actions/category";
 import {toast} from "sonner"
 
-export const categoryOptions = (id: number) => {
+export const categoryOptions = (id: number | null | undefined) => {
     return queryOptions({
         queryKey: ['categories', id],
-        queryFn: () => getCategoryById(id),
+        queryFn: () => getCategoryById(id!),
         staleTime: 1000 * 60 * 30, // 30 min,
         enabled: !!id
     })
@@ -20,7 +20,7 @@ export const categoryIdOptions = () => {
     })
 }
 
-export const useCategoryById = (id: number) => {
+export const useCategoryById = (id: number | null | undefined) => {
     return useQuery(categoryOptions(id))
 }
 

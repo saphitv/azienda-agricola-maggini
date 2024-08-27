@@ -3,7 +3,7 @@ import {users} from "@/lib/db/schemas/auth";
 
 export const works = mysqlTable('work', {
     id: int('id').primaryKey().autoincrement(),
-    user_id: varchar('user_id', { length: 255 }).references(() => users.id),
+    user_id: varchar('user_id', { length: 255 }).notNull().references(() => users.id),
     activity_id: int('fk_activity').references(() => activities.id),
     day: datetime('day').notNull(),
     ore: int('ore').notNull(),

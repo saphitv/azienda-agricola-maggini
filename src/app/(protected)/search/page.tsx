@@ -12,6 +12,7 @@ import {PDFLavori} from "@/app/(protected)/search/_components/pdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import {DateTime} from "luxon";
 import {useUsers} from "@/hooks/use-users";
+import {useCategories} from "@/hooks/use-category";
 
 
 export default function Page() {
@@ -23,7 +24,9 @@ export default function Page() {
         []
     )
     const {data: users} = useUsers()
+    const { data: categories, isPending: isCategoriesPending} = useCategories()
     const [usersFilters, setUsersFilters] = useState<string[ ]>([])
+    const [categoryFilters, setCategoryFilters] = useState<number[ ]>([])
     const [sorting, setSorting] = useState<SortingState>([])
 
     const {data, isPending, rowCount} = useWorksFiltered({
@@ -33,12 +36,11 @@ export default function Page() {
         dateFilterValues: columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any,
         usersFilter: (users ?? [])
             .filter(user => usersFilters.length == 0 || usersFilters.includes(user.id))
-            .map(user => user.id)
+            .map(user => user.id),
+        categoryFilter: (!categories || isCategoriesPending ? [] : categories)
+            .filter(cat => categoryFilters.length == 0 || categoryFilters.includes(cat.id))
+            .map(cat => cat.id)
     })
-
-    useEffect(() => {
-        console.log(users)
-    }, [users]);
 
     const {start = DateTime.now().startOf('month'), end = DateTime.now().endOf('month')} = columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any ?? {}
 
@@ -63,6 +65,7 @@ export default function Page() {
                     fileName={`Lavori ${start.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})} - ${end.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})}`}
                     document={<PDFLavori
                         data={data}
+                        users={users ?? []}
                         startdate={start}
                         enddate={end}/>}
                 >
@@ -78,6 +81,7 @@ export default function Page() {
                 sorting={sorting} setSorting={setSorting}
                 columnFilters={columnFilters} setColumnFilters={setColumnFilters}
                 usersFilters={usersFilters} setUsersFilters={setUsersFilters} users={users ?? []}
+                categoryFilters={categoryFilters} setCategoryFilters={setCategoryFilters}
             />
         </div>
 

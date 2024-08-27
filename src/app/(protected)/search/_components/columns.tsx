@@ -10,6 +10,9 @@ import {FormCategoria} from "@/app/(protected)/category/_components/form-categor
 import {useDeleteWork} from "@/hooks/use-work";
 import {FormWork} from "@/app/(protected)/work/_components/form-work";
 import { DateTime } from "luxon";
+import {useCategoryById} from "@/hooks/use-category";
+import {Badge} from "@/components/ui/badge";
+import {useUsers} from "@/hooks/use-users";
 
 const filterFunction: FilterFn<Work> = (row, columnId, filterValue) => {
     const searchableRowContent = `${row.original.name} ${row.original.description}`;
@@ -19,7 +22,6 @@ const filterFunction: FilterFn<Work> = (row, columnId, filterValue) => {
 }
 
 const filterDateFn: FilterFn<Work> = (row, columnId, filterValue, addMeta) => {
-    console.log("filter function")
     const {start, end} = filterValue as { start?: DateTime, end?: DateTime}
 
     if(start && start.diff(DateTime.fromJSDate(row.original.day)).toMillis() < 0) return false
@@ -35,6 +37,16 @@ export const columns: ColumnDef<Work>[] = [
     {
         accessorKey: "id",
         header: "Id"
+    },
+    {
+        accessorKey: "user_id",
+        header: "User",
+        cell: ({row}) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { data: users} = useUsers()
+
+            return (users ?? []).find(user => user.id == row.getValue('user_id'))?.username ?? ""
+        }
     },
     {
         accessorKey: "day",
@@ -63,7 +75,7 @@ export const columns: ColumnDef<Work>[] = [
                         hour: "numeric",
                         minute: "numeric",
                         hourCycle: "h24"
-                    })}
+                    }, { locale: 'it'})}
                 </div>
             )
         },
@@ -72,6 +84,23 @@ export const columns: ColumnDef<Work>[] = [
     {
         accessorKey: "hour",
         header: "Ore",
+    },
+    {
+        accessorKey: "categoria",
+        header: "Categoria",
+        cell: ({row}) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { data: activity } = useActivityById(row.getValue('activity_id'))
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { data: category } = useCategoryById(activity?.category_id)
+
+
+            return (
+                <Badge style={{background: category?.color}}>
+                    {category?.nome}
+                </Badge>
+            )
+        }
     },
     {
         accessorKey: "activity_id",

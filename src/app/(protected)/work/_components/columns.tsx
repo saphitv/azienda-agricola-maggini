@@ -10,6 +10,8 @@ import {FormCategoria} from "@/app/(protected)/category/_components/form-categor
 import {useDeleteWork} from "@/hooks/use-work";
 import {FormWork} from "@/app/(protected)/work/_components/form-work";
 import { DateTime } from "luxon";
+import {useCategoryById} from "@/hooks/use-category";
+import {Badge} from "@/components/ui/badge";
 
 const filterFunction: FilterFn<Work> = (row, columnId, filterValue) => {
     const searchableRowContent = `${row.original.name} ${row.original.description}`;
@@ -29,7 +31,7 @@ export const columns: ColumnDef<Work>[] = [
         cell: ({row}) => {
             return (
                 <div className='w-32'>
-                    {DateTime.fromJSDate(row.getValue('day')).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})}
+                    {DateTime.fromJSDate(row.getValue('day')).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"}, { locale: "it"})}
                 </div>
             )
         }
@@ -37,6 +39,23 @@ export const columns: ColumnDef<Work>[] = [
     {
         accessorKey: "hour",
         header: "Ore",
+    },
+    {
+        accessorKey: "categoria",
+        header: "Categoria",
+        cell: ({row}) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { data: activity } = useActivityById(row.getValue('activity_id'))
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const { data: category } = useCategoryById(activity?.category_id)
+
+
+            return (
+                <Badge style={{background: category?.color}}>
+                    {category?.nome}
+                </Badge>
+            )
+        }
     },
     {
         accessorKey: "activity_id",

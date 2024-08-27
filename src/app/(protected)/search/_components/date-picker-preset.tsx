@@ -9,6 +9,7 @@ import {DateTime} from "luxon";
 import {exportFilters} from "@/app/(protected)/search/_components/data-table";
 import {FormLabel} from "@/components/ui/form";
 import {Label} from "@/components/ui/label";
+import {itCH} from "date-fns/locale";
 
 
 
@@ -27,7 +28,7 @@ export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDa
                             )}
                         >
                             <CalendarIcon className="mr-2 h-4 w-4"/>
-                            {dates.start ? format(dates.start.toJSDate(), "PPP") : <span>Seleziona una data</span>}
+                            {dates.start ? format(dates.start.toJSDate(), "PPP", { locale: itCH}) : <span>Seleziona una data</span>}
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
@@ -50,7 +51,7 @@ export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDa
                             <Calendar mode="single" selected={dates.start?.toJSDate()} onSelect={value => setDates({
                                 ...dates,
                                 start: value ? DateTime.fromJSDate(value) : undefined
-                            })}/>
+                            })} locale={itCH}/>
                         </div>
                     </PopoverContent>
                 </Popover>
@@ -67,7 +68,7 @@ export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDa
                             )}
                         >
                             <CalendarIcon className="mr-2 h-4 w-4"/>
-                            {dates.end ? format(dates.end.toJSDate(), "PPP") : <span>Seleziona una data</span>}
+                            {dates.end ? format(dates.end.toJSDate(), "PPP", { locale: itCH}) : <span>Seleziona una data</span>}
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
@@ -90,7 +91,7 @@ export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDa
                             <Calendar mode="single" selected={dates.end?.toJSDate()} onSelect={value => setDates({
                                 ...dates,
                                 end: value ? DateTime.fromJSDate(value) : undefined
-                            })}/>
+                            })} locale={itCH}/>
                         </div>
                     </PopoverContent>
                 </Popover>

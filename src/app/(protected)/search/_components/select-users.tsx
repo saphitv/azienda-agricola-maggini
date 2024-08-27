@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {Check, ChevronsUpDown} from "lucide-react"
+import {Check, ChevronsUpDown, Shovel, User} from "lucide-react"
 
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
@@ -49,9 +49,10 @@ export function SelectUsers({users, usersFilters, setUsersFilters}: {
                     <div className="flex gap-2 justify-start">
                         {usersFilters?.length ?
                             usersFilters.map((val, i) => (
-                                <div key={i} className="px-2 py-1 rounded-xl border bg-slate-200 text-xs font-medium">{users.find((user) => user.id === val)?.username}</div>
+                                <div key={i}
+                                     className="px-2 py-1 rounded-xl border bg-slate-200 text-xs font-medium">{users.find((user) => user.id === val)?.username}</div>
                             ))
-                            : "Filtra per persona"}
+                            : <div className='flex flex-row gap-2 items-center'><User className='w-4 h-4'/> Filtra per persona</div>}
                     </div>
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
