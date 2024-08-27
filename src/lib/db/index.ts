@@ -1,9 +1,11 @@
 import {drizzle} from "drizzle-orm/mysql2";
 import {createConnection, createPool} from "mysql2";
 import * as auth from "./schemas/auth";
+import * as dev from "./schemas/dev";
 
 export const schema = {
-    ...auth
+    ...auth,
+    ...dev
 }
 
 const connection = createPool({

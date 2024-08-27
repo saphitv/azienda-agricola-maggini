@@ -7,6 +7,7 @@ import Link from "next/link";
 import {useCurrentUser} from "@/hooks/auth/use-current-user";
 import {HoursChart} from "@/app/_components/hours-chart";
 import {RoleGate} from "@/components/auth/role-gate";
+import {HoursCard} from "@/app/_components/hours-card";
 
 export default function Home() {
   const { data} = useCategories()
@@ -22,6 +23,7 @@ export default function Home() {
         <Link href={'/activity'}><Button variant='secondary'>Attività</Button></Link>
       </div>
     </RoleGate>
+    <HoursCard />
     <HoursChart />
   </div>
 </div>

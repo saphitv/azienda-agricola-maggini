@@ -1,7 +1,7 @@
 "use client"
 
 import {TrendingDown, TrendingUp} from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import {Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis} from "recharts"
 
 import {
     Card,
@@ -17,16 +17,9 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import {useStatistics} from "@/hooks/use-statistics";
+import {useHomepageChartStatistics} from "@/hooks/use-statistics";
 import {DateTime} from "luxon";
-const chartData = [
-    { month: "Aprile", desktop: 186 },
-    { month: "Marzo", desktop: 305 },
-    { month: "Maggio", desktop: 237 },
-    { month: "Giugno", desktop: 73 },
-    { month: "Luglio", desktop: 209 },
-    { month: "Agosto", desktop: 214 },
-]
+
 
 const chartConfig = {
     hours: {
@@ -36,11 +29,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function HoursChart() {
-    const { data} = useStatistics()
+    const { data} = useHomepageChartStatistics()
 
     const statistics = (data?.data ?? []).map(val => ({
-            month: DateTime.fromFormat(val.xperio.toString(), 'yyyyMM').set({day: 1}),
-            label: DateTime.fromFormat(val.xperio.toString(), 'yyyyMM').set({day: 1}).toLocaleString({ month: "long"}, { locale: 'it'}),
+            month: DateTime.fromFormat(val.xperio.toString(), 'yyyy-MM').set({day: 1}),
+            label: DateTime.fromFormat(val.xperio.toString(), 'yyyy-MM').set({day: 1}).toLocaleString({ month: "short"}, { locale: 'it'}),
             xperio: val.xperio,
             hours: val.hours
         })
@@ -72,11 +65,24 @@ export function HoursChart() {
                             tickMargin={10}
                             axisLine={false}
                         />
+                        <YAxis
+                            domain={[0, Math.max(...statistics.map(s => +s.hours)) * 1.05]}
+                            hide
+                        />
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="hours" fill="var(--color-hours)" radius={8} />
+
+                        <Bar dataKey="hours" fill="var(--color-hours)" radius={8} >
+                            <LabelList
+                                dataKey="hours"
+                                offset={8}
+                                fontSize={12}
+                                formatter={(value: number) => value < 5 ? "" : value}
+                                fill={'#fff'}
+                            />
+                        </Bar>
                     </BarChart>
                 </ChartContainer>
             </CardContent>
