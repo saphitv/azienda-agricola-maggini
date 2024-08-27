@@ -52,7 +52,6 @@ export function HoursChart() {
         statistics.reduce((curr, prev) => +curr + +prev.hours, 0) / statistics.length
         : 1
 
-    console.log(currentMonth, mediaMensile)
 
     const aumentoMeseCorrente = Math.round(currentMonth / mediaMensile * 100 * 10) / 10
 
