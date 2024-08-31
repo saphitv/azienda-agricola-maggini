@@ -50,7 +50,7 @@ export function HoursChart() {
 
 
     return (
-        <Card>
+        <Card className='w-full'>
             <CardHeader>
                 <CardTitle>Ore per mese</CardTitle>
                 <CardDescription>Aprile - Agosto 2024</CardDescription>

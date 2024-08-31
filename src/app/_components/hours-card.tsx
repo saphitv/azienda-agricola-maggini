@@ -6,11 +6,12 @@ import {ChartContainer} from "@/components/ui/chart"
 
 import {Bar, BarChart, LabelList, XAxis, YAxis} from "recharts"
 import {DateTime} from "luxon";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export const HoursCard = () => {
     const {data, isPending} = useSumHoursStatistics()
 
-    if(isPending) return 'Loading'
+    if(isPending) return <Skeleton className='w-full h-96'/>
 
 
     return (

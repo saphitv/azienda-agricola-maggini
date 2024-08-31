@@ -2,7 +2,7 @@
 
 import {currentUser} from "@/lib/auth/auth";
 import {db} from "@/lib/db";
-import {works} from "@/lib/db/schemas/general";
+import {activities, categories, works} from "@/lib/db/schemas/general";
 import {and, eq, gt, lt, sql, sum} from "drizzle-orm";
 import { DateTime } from "luxon";
 import {NextResponse} from "next/server";
@@ -82,5 +82,36 @@ export const getSumHoursYear = async () => {
         status: "success",
         message: "Dati presi con successo",
         data: sumHoursYear
+    }
+}
+
+export const getHourSortedByCategory = async () => {
+    const user = await currentUser()
+
+    if(!user || !user.id) return {
+        status: "error",
+        message: 'Unauthorized used',
+        data: []
+    }
+
+    const hourPerCategory = await db
+        .select({
+            category: categories.nome,
+            color: categories.color,
+            hours: sum(works.ore).as('hours'),
+        })
+        .from(works)
+        .innerJoin(activities, eq(works.activity_id, activities.id))
+        .innerJoin(categories, eq(activities.category_id, categories.id))
+        .where(eq(
+            sql`extract(YEAR from ${works.day})`,
+            DateTime.now().toLocaleString({year: "numeric"})
+        ))
+        .groupBy(categories.nome, categories.color)
+
+    return {
+        status: "success",
+        message: "Dati presi con successo",
+        data: hourPerCategory
     }
 }
