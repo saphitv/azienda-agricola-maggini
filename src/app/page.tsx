@@ -20,8 +20,8 @@ export default function Home() {
                     </div>
                 </RoleGate>
                 <div className='flex flex-col gap-4 lg:flex-row'>
-                    <CategoryChart />
                     <HoursChart/>
+                    <CategoryChart />
                 </div>
                 <HoursCard/>
 

@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
 
     useEffect(() => {
         table.getColumn('day')?.setFilterValue(filterDates)
-    }, [filterDates])
+    }, [table, filterDates])
 
 
     return (

@@ -14,7 +14,7 @@ services:
       - .:/home/node/app
     depends_on:
       - db
-    command: sh -c "npm i && npm run dev"
+    command: sh -c "npm i && npm run build && npm run start"
   http-db:
     env_file:
       - .env

@@ -67,6 +67,15 @@ export function CategoryChart() {
 
     if(isPending) return <Skeleton className='w-full h-96'/>
 
+    const customChartConfig = Object.fromEntries(
+        Object.entries(
+            Object.groupBy(data?.data ?? [], data => data.category)
+        )
+        .map(([key, value], index) => ([key, { label: value![0].category, color: `hsl(var(--chart-${index + 1}))`}]))
+    ) satisfies ChartConfig
+
+    console.log(customChartConfig, data?.data)
+
     return (
         <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">
@@ -75,7 +84,7 @@ export function CategoryChart() {
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
-                    config={chartConfig}
+                    config={customChartConfig}
                     className="mx-auto aspect-square max-h-[250px]"
                 >
                     <PieChart>
@@ -84,9 +93,15 @@ export function CategoryChart() {
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <Pie
-                            data={chartData}
-                            dataKey="visitors"
-                            nameKey="browser"
+                            data={data?.data.map((value) => (
+                                {
+                                    ...value,
+                                    //fill: value.color,
+                                    fill: `var(--color-${value.category})`,
+                                    hours: +(value.hours ?? 0)
+                                }))}
+                            dataKey="hours"
+                            nameKey="category"
                             innerRadius={60}
                             strokeWidth={5}
                         >
@@ -112,7 +127,7 @@ export function CategoryChart() {
                                                     y={(viewBox.cy || 0) + 24}
                                                     className="fill-muted-foreground"
                                                 >
-                                                    Visitors
+                                                    Ore
                                                 </tspan>
                                             </text>
                                         )
@@ -124,11 +139,8 @@ export function CategoryChart() {
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 font-medium leading-none">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-                </div>
                 <div className="leading-none text-muted-foreground">
-                    Showing total visitors for the last 6 months
+                    Mostra le ore di quest`&apos;anno suddivise in categorie.
                 </div>
             </CardFooter>
         </Card>

@@ -46,7 +46,7 @@ function NoPermission() {
                 <LockIcon className="mx-auto h-16 w-16 text-gray-500 dark:text-gray-400"/>
                 <h1 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-gray-50">Accesso negato</h1>
                 <p className="text-gray-500 dark:text-gray-400">
-                    Non hai i permessi per visualizzare questo contenuto. Se credi questo sia un errore contatta l'amministratore di questo sito.
+                    Non hai i permessi per visualizzare questo contenuto. Se credi questo sia un errore contatta l`&apos;amministratore di questo sito.
                     believe this is an error.
                 </p>
                 <div className="flex flex-row gap-2 sm:flex-row">

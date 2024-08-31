@@ -103,10 +103,15 @@ export const getHourSortedByCategory = async () => {
         .from(works)
         .innerJoin(activities, eq(works.activity_id, activities.id))
         .innerJoin(categories, eq(activities.category_id, categories.id))
-        .where(eq(
-            sql`extract(YEAR from ${works.day})`,
-            DateTime.now().toLocaleString({year: "numeric"})
-        ))
+        .where(
+            and(
+                eq(
+                    sql`extract(YEAR from ${works.day})`,
+                    DateTime.now().toLocaleString({year: "numeric"})
+                ),
+                eq(works.user_id, user.id)
+            )
+        )
         .groupBy(categories.nome, categories.color)
 
     return {

@@ -87,11 +87,11 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
                 ),
                 or(
                     sql`${usersFilter.length} = 0`,
-                    inArray(works.user_id, usersFilter)
+                    inArray(works.user_id, [...usersFilter, "-1"])
                 ),
                 or(
                     sql`${categoryFilter.length} = 0`,
-                    inArray(activities.category_id, categoryFilter)
+                    inArray(activities.category_id, [...categoryFilter, -1])
                 )
             )
         )

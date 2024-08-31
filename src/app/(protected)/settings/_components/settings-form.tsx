@@ -14,7 +14,6 @@ import * as z from "zod";
 import {SettingsSchema} from "@/schemas/auth";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {settings} from "@/actions/auth/settings";
-import {ExtendedUser} from "@/next-auth";
 
 export default function SettingsForm() {
     const user = useCurrentUser();
@@ -36,12 +35,16 @@ export default function SettingsForm() {
         }
     });
 
+
     useEffect(() => {
         form.setValue('name', user?.name ?? '')
         form.setValue('email', user?.email ?? '')
         form.setValue('role', user?.role!)
         form.setValue('isTwoFactorEnabled', user?.isTwoFactorEnabled ? 1 : 0)
-    }, [user])
+    }, [form, user])
+
+    if(!user) return null
+
 
     const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
         settings(values)

@@ -235,8 +235,8 @@ function Calendar({
                       yearRange = 50,
                       ...props
                   }: CalendarProps & { yearRange?: number }) {
-    const MONTHS = React.useMemo(() => genMonths(props.locale || enUS), []);
-    const YEARS = React.useMemo(() => genYears(props.locale || enUS, yearRange), []);
+    const MONTHS = React.useMemo(() => genMonths(props.locale || enUS), [props.locale]); // edited with props.locale, before: []
+    const YEARS = React.useMemo(() => genYears(props.locale || enUS, yearRange), [props.locale]);
 
     return (
         <DayPicker

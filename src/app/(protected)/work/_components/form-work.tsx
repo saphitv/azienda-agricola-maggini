@@ -65,7 +65,7 @@ export const FormWork = ({work}: {
     useEffect(() => {
         if(activities.find(act => act.id == activity_id)?.category_id != category_id)
             form.setValue("activity_id", null)
-    }, [category_id, activity_id])
+    }, [category_id, activity_id, activities, form])
 
 
     const onSubmit = (values: z.infer<typeof workSchema>) => {
