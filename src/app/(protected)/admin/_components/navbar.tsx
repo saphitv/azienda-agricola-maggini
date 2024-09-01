@@ -4,10 +4,12 @@ import {usePathname, useRouter} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {UserButton} from "@/components/auth/user-button";
 import {ShoppingCart, UserIcon} from "lucide-react";
+import {useCurrentUser} from "@/hooks/auth/use-current-user";
 
 export default function NavBar(){
     const pathname = usePathname()
     const router = useRouter()
+    const user = useCurrentUser()
 
     const pages = [
         { name: 'Public section', href: '/', icon: UserIcon },
@@ -36,7 +38,7 @@ export default function NavBar(){
                     </div>
                 ))}
             </div>
-            <div><UserButton/></div>
+            <div><UserButton user={user}/></div>
         </nav>
     )
 }

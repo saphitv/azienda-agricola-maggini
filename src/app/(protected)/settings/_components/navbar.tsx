@@ -4,10 +4,12 @@ import {usePathname, useRouter} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {UserButton} from "@/components/auth/user-button";
 import {ShoppingCart} from "lucide-react";
+import {useCurrentUser} from "@/hooks/auth/use-current-user";
 
 export default function NavBar(){
     const pathname = usePathname()
     const router = useRouter()
+    const user = useCurrentUser()
 
     const pages = [
         /* { name: 'Dashboard', href: '/admin', icon: icons.HomeIcon }, */
@@ -36,7 +38,7 @@ export default function NavBar(){
                     </div>
                 ))}
             </div>
-            <div><UserButton/></div>
+            <div><UserButton user={user}/></div>
         </nav>
     )
 }
