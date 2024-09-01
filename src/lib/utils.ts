@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getBaseUrl() {
   if (typeof window !== "undefined") return "";
 
-  if (process.env.PROD == "true") return `https://${process.env.NEXTAUTH_URL}`;
+  //if (process.env.PROD == "true") return `https://${process.env.NEXTAUTH_URL}`;
   //if (process.env.VERCEL_URL) return `https://aam.saphi.dev`;
 
   return `http://localhost:${process.env.PORT ?? 3000}`;

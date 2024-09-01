@@ -59,7 +59,7 @@ export async function Navbar() {
                             )}
                             {!!user?.id &&
                             <div className='w-full flex items-center justify-center m-1'>
-                                <UserButton withoutText/>
+                                <UserButton withoutText user={user}/>
                             </div>
                             }
                         </nav>

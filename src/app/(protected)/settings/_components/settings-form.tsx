@@ -17,6 +17,7 @@ import {settings} from "@/actions/auth/settings";
 
 export default function SettingsForm() {
     const user = useCurrentUser();
+    const {status } = useSession()
 
     const [error, setError] = useState<string | undefined>();
     const [success, setSuccess] = useState<string | undefined>();
@@ -43,8 +44,9 @@ export default function SettingsForm() {
         form.setValue('isTwoFactorEnabled', user?.isTwoFactorEnabled ? 1 : 0)
     }, [form, user])
 
-    if(!user) return null
+    if(!user && status == "unauthenticated") location.replace('/settings')
 
+    if(!user) return null
 
     const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
         settings(values)

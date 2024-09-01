@@ -20,15 +20,23 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {ShoppingBagIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useSession} from "next-auth/react";
+import {useEffect} from "react";
+import {unstable_update} from "@/auth";
+import {currentUser} from "@/lib/auth/auth";
 
-export const UserButton = ({withoutText}: {withoutText?: boolean}) => {
-    const user = useCurrentUser();
+export const UserButton = ({withoutText, user}: {withoutText?: boolean, user: Awaited<ReturnType<typeof currentUser>>}) => {
+    //const user = useCurrentUser();
+    const { status, data, update} = useSession()
     const router = useRouter();
+
 
     if(!user?.id) return <Skeleton className="w-[40px] h-[40px] rounded-full" />
 
     return (
+        <>
         <DropdownMenu>
+
             <DropdownMenuTrigger>
                 <div className="flex items-center">
                     <Avatar>
@@ -62,5 +70,6 @@ export const UserButton = ({withoutText}: {withoutText?: boolean}) => {
 
             </DropdownMenuContent>
         </DropdownMenu>
+        </>
     );
 };

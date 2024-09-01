@@ -1,30 +1,15 @@
-"use client"
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 import {useCurrentUser} from "@/hooks/auth/use-current-user";
-import {HoursChart} from "@/app/_components/hours-chart";
-import {RoleGate} from "@/components/auth/role-gate";
-import {HoursCard} from "@/app/_components/hours-card";
-import {CategoryChart} from "@/app/_components/category-chart";
+import {auth} from "@/auth";
+import {Dashboard} from "@/app/_components/dashboard";
 
-export default function Home() {
-    const user = useCurrentUser()
+export default async function Home() {
+    //const user = useCurrentUser()
+    const session = await auth()
     return (
         <div className='p-4 space-y-2'>
-            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Bentornato {user?.name}</h3>
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">Bentornato {session?.user.name}</h3>
             <div className='flex flex-col space-y-4'>
-                <RoleGate allowedRole={"ADMIN"}>
-                    <div className='space-x-2 '>
-                        <Link href={'/category'}><Button variant='secondary'>Categorie</Button></Link>
-                        <Link href={'/activity'}><Button variant='secondary'>Attività</Button></Link>
-                    </div>
-                </RoleGate>
-                <div className='flex flex-col gap-4 lg:flex-row'>
-                    <HoursChart/>
-                    <CategoryChart />
-                </div>
-                <HoursCard/>
-
+                <Dashboard session={session}/>
             </div>
         </div>
     );

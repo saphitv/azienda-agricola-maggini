@@ -74,8 +74,6 @@ export function CategoryChart() {
         .map(([key, value], index) => ([key, { label: value![0].category, color: `hsl(var(--chart-${index + 1}))`}]))
     ) satisfies ChartConfig
 
-    console.log(customChartConfig, data?.data)
-
     return (
         <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">

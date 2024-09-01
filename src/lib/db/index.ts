@@ -18,6 +18,5 @@ const connection = createPool({
 
 export const db = drizzle(connection, {
     mode: 'default',
-    logger: true,
     schema,
 })

@@ -10,6 +10,21 @@ import { getUserByEmail } from "@/lib/http-db/utils/auth/user";
 
 
 export default {
+    debug: true,
+    cookies: {
+      csrfToken: {
+          options: {
+              httpOnly: false,
+              secure: process.env.PROD == "true"
+          }
+      },
+        sessionToken: {
+          options: {
+              httpOnly: false,
+              secure: process.env.PROD == "true"
+          }
+        }
+    },
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -33,6 +48,8 @@ export default {
                         password,
                         user.password,
                     );
+
+                    //console.log("returning user")
 
                     if (passwordsMatch) return user;
                 }

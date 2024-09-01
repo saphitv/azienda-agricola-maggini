@@ -4,7 +4,7 @@ import * as z from "zod";
 import { AuthError } from "next-auth";
 
 import { db } from "@/lib/db";
-import { signIn } from "@/auth";
+import {signIn, unstable_update} from "@/auth";
 import { LoginSchema } from "@/schemas/auth";
 import { getTwoFactorTokenByEmail } from "@/lib/db/utils/auth/two-factor-token";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
@@ -24,6 +24,8 @@ export const login = async (
     values: z.infer<typeof LoginSchema>,
     callbackUrl?: string | null,
 ) => {
+    console.log("start login")
+
     const validatedFields = LoginSchema.safeParse(values);
 
     if (!validatedFields.success) {
@@ -109,12 +111,19 @@ export const login = async (
         }
     }
 
+
     try {
-        await signIn("credentials", {
+        const redirectURL = await signIn("credentials", {
             email,
             password,
+            redirect: false,
             redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
         })
+
+        return {
+            success: "Login successful",
+            redirect: redirectURL
+        }
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

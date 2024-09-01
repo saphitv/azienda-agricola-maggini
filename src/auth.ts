@@ -11,7 +11,7 @@ import {eq} from "drizzle-orm";
 // export const sqliteTable = sqliteTableCreator((name) => `${process.env.DB_PREFIX}${name}`);
 
 export const {
-    handlers: {GET, POST},
+    handlers,
     auth,
     signIn,
     signOut,
@@ -54,9 +54,11 @@ export const {
             return true;
         },
         async session({token, session}) {
+            //console.log("Session callback", { session, token });
             if (token.sub && session.user) {
                 session.user.id = token.sub;
             }
+
 
             if (token.role && session.user) {
                 session.user.role = token.role as UserRoleEnum;
@@ -73,10 +75,13 @@ export const {
                 }
                 session.user.isOAuth = token.isOAuth as boolean;
             }
+            //console.log("end session", session)
 
+            //console.log("ens session", session)
             return session;
         },
-        async jwt({token}) {
+        async jwt({token, user}) {
+            //console.log("JWT callback", { token, user });
             if (!token.sub) return token;
 
             const existingUser = await getUserById(token.sub);
@@ -97,6 +102,7 @@ export const {
         }
     },
     adapter: DrizzleAdapter(db),
+    secret: process.env.NEXTAUTH_SECRET,
     session: {strategy: "jwt"},
     ...authConfig,
 });
