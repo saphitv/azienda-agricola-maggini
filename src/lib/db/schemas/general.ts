@@ -1,4 +1,4 @@
-import {bigint, datetime, int, mysqlTable, serial, timestamp, varchar} from "drizzle-orm/mysql-core";
+import {datetime, int, mysqlTable, double, timestamp, varchar} from "drizzle-orm/mysql-core";
 import {users} from "@/lib/db/schemas/auth";
 
 export const works = mysqlTable('work', {
@@ -6,7 +6,7 @@ export const works = mysqlTable('work', {
     user_id: varchar('user_id', { length: 255 }).notNull().references(() => users.id),
     activity_id: int('fk_activity').references(() => activities.id),
     day: datetime('day').notNull(),
-    ore: int('ore').notNull(),
+    ore: double('ore').notNull(),
     nome: varchar('nome', { length: 255 }).notNull(),
     description: varchar('description', { length: 4000 }),
     createdAt: timestamp("created_at", { mode: 'string'}).defaultNow(),
