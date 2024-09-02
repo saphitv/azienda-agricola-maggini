@@ -84,7 +84,7 @@ export const FormWork = ({work}: {
             <Form {...form} >
                 <form onSubmit={form.handleSubmit(onSubmit)} className='px-2'>
                     <DrawerHeader>
-                        <DrawerTitle>{work?.id ? 'Vuoi modificare questa lavoro?' : 'Vuoi create un nuovo lavoro?'}</DrawerTitle>
+                        <DrawerTitle>{work?.id ? 'Vuoi modificare questa lavoro?' : 'Vuoi creare un nuovo lavoro?'}</DrawerTitle>
                         <DrawerDescription>Questa azione non potrà essere annullata.</DrawerDescription>
                     </DrawerHeader>
 
