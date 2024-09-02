@@ -43,7 +43,12 @@ export const getWorkById = async (id: number): Promise<Work | undefined> => {
 }
 
 export const getAllWorkId = async (): Promise<{id: number}[]> => {
-    return db.select({id: works.id}).from(works).orderBy(desc(works.day))
+    const user = await currentUser()
+    return db
+        .select({id: works.id})
+        .from(works)
+        .where(eq(works.user_id, user?.id ?? ""))
+        .orderBy(desc(works.day))
 }
 
 export const getWorksIdFiltered = async (filtersAndPagination: {
