@@ -13,6 +13,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import {DateTime} from "luxon";
 import {useUsers} from "@/hooks/use-users";
 import {useCategories} from "@/hooks/use-category";
+import {useActivities} from "@/hooks/use-activity";
 
 
 export default function Page() {
@@ -25,6 +26,7 @@ export default function Page() {
     )
     const {data: users} = useUsers()
     const { data: categories, isPending: isCategoriesPending} = useCategories()
+    const { data: activities, isPending: isActivitiesPending} = useActivities()
     const [usersFilters, setUsersFilters] = useState<string[ ]>([])
     const [categoryFilters, setCategoryFilters] = useState<number[ ]>([])
     const [sorting, setSorting] = useState<SortingState>([])
@@ -51,7 +53,7 @@ export default function Page() {
         setIsClient(true)
     }, [])
 
-    if (!isClient || isPending) return (
+    if (!isClient || isPending || isActivitiesPending) return (
         <div className='w-screen h-screen flex items-center justify-center'>
             <LoaderCircle className='animate-spin text-slate-300 w-10 h-10'/>
         </div>
@@ -65,6 +67,7 @@ export default function Page() {
                     fileName={`Lavori ${start.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})} - ${end.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})}`}
                     document={<PDFLavori
                         data={data}
+                        activities={activities}
                         users={users ?? []}
                         startdate={start}
                         enddate={end}/>}
