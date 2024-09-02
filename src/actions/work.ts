@@ -1,14 +1,11 @@
 "use server"
 import {db} from "@/lib/db";
 import {activities, works} from "@/lib/db/schemas/general";
-import {and, asc, count, desc, eq, gt, InferInsertModel, InferSelectModel, like, lt, or, sql} from "drizzle-orm";
+import {and, asc, count, desc, eq, gt, InferInsertModel, like, lt, or, sql} from "drizzle-orm";
 import {currentUser} from "@/lib/auth/auth";
-import {WorkFilters} from "@/hooks/use-work";
-import {PaginatedData} from "@/types/table";
 import {SEARCH_DEFAULT_PAGE, SEARCH_DEFAULT_PAGE_SIZE} from "@/lib/settings";
 import {SortingState} from "@tanstack/table-core";
 import {DateTime} from "luxon";
-import {userAgentFromString} from "next/server";
 import {inArray} from "drizzle-orm/sql/expressions/conditions";
 
 export type Work = {

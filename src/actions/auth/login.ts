@@ -1,20 +1,15 @@
 "use server";
 
 import * as z from "zod";
-import { AuthError } from "next-auth";
+import {AuthError} from "next-auth";
 
-import { db } from "@/lib/db";
-import {signIn, unstable_update} from "@/auth";
-import { LoginSchema } from "@/schemas/auth";
-import { getTwoFactorTokenByEmail } from "@/lib/db/utils/auth/two-factor-token";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import {
-    generateVerificationToken,
-    generateTwoFactorToken
-} from "@/lib/auth/tokens";
-import {
-    getTwoFactorConfirmationByUserId
-} from "@/lib/db/utils/auth/two-factor-confirmation";
+import {db} from "@/lib/db";
+import {signIn} from "@/auth";
+import {LoginSchema} from "@/schemas/auth";
+import {getTwoFactorTokenByEmail} from "@/lib/db/utils/auth/two-factor-token";
+import {DEFAULT_LOGIN_REDIRECT} from "@/routes";
+import {generateTwoFactorToken, generateVerificationToken} from "@/lib/auth/tokens";
+import {getTwoFactorConfirmationByUserId} from "@/lib/db/utils/auth/two-factor-confirmation";
 import {twoFactorConfirmations, twoFactorTokens} from "@/lib/db/schemas/auth";
 import {eq} from "drizzle-orm";
 import {sendTwoFactorTokenEmail, sendVerificationEmail} from "@/lib/mail";

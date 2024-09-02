@@ -20,7 +20,6 @@ import {InputOTP, InputOTPGroup, InputOTPSlot} from "@/components/ui/input-otp";
 export const LoginForm = () => {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl");
-    const router = useRouter()
     const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
         ? "Email already in use with different provider!"
         : "";
@@ -43,33 +42,35 @@ export const LoginForm = () => {
         setError("");
         setSuccess("");
 
-        try {
-            console.log(1, values, callbackUrl)
-            const data = await login(values, callbackUrl)
-            console.log(2, data)
+        startTransition(async () => {
+            try {
+                console.log(1, values, callbackUrl)
+                const data = await login(values, callbackUrl)
+                console.log(2, data)
 
-            if (data?.error) {
-                form.resetField('code')
-                setError(data.error);
-                if (data.error == "Code expired!") {
-                    setShowTwoFactor(false)
+                if (data?.error) {
+                    form.resetField('code')
+                    setError(data.error);
+                    if (data.error == "Code expired!") {
+                        setShowTwoFactor(false)
+                    }
                 }
-            }
 
 
-            if (data?.success) {
-                form.reset();
-                setSuccess(data.success);
-                //router.push(data.redirect)
-            }
+                if (data?.success) {
+                    form.reset();
+                    setSuccess(data.success);
+                    //router.push(data.redirect)
+                }
 
-            if (data?.twoFactor) {
-                setShowTwoFactor(true);
+                if (data?.twoFactor) {
+                    setShowTwoFactor(true);
+                }
+            } catch (err) {
+                console.error("Something went wrong")
+                setError("Something went wrong")
             }
-        } catch (err) {
-            console.error("Something went wrong")
-            setError("Something went wrong")
-        }
+        });
     };
 
     return (

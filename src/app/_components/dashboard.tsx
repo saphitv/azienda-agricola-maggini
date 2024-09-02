@@ -9,9 +9,8 @@ import {HoursCard} from "@/app/_components/hours-card";
 import {useWorks} from "@/hooks/use-work";
 import {BlankState} from "@/app/_components/blank-state";
 
-export function Dashboard({session}: {session: any}) {
+export function Dashboard() {
     const { data: works, isPending} = useWorks()
-    const { data: worksId, isPending: isPendingId} = useWorks()
 
     console.log(works, isPending, works?.length)
     if(!isPending && works?.filter(w => !!w).length === 0) return <BlankState/>

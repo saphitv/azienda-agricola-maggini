@@ -1,10 +1,7 @@
 import {UserButton} from "@/components/auth/user-button";
 import {Icons} from "@/lib/icons";
 import {currentUser} from "@/lib/auth/auth";
-import {headers} from "next/headers";
 import {NavbarItem} from "@/components/navbar/navbar-item";
-import {Suspense} from "react";
-import {Skeleton} from "@/components/ui/skeleton";
 
 
 const navbarItems = [

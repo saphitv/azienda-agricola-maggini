@@ -24,9 +24,8 @@ import {DateTimePicker} from "@/components/datetime-picker";
 import {Textarea} from "@/components/ui/textarea";
 import {DateTime} from "luxon";
 import {useCategories} from "@/hooks/use-category";
-import {Badge} from "@/components/ui/badge";
 import {useEffect} from "react";
-import { itCH } from 'date-fns/locale'
+import {itCH} from 'date-fns/locale'
 
 const workSchema = z.object({
     day: z.date(),
@@ -169,7 +168,7 @@ export const FormWork = ({work}: {
                                         <SelectContent>
                                             {Object.entries(Object.groupBy(activities, act => act?.category_id ?? "other"))
                                                 .filter(([key]) => category_id == null || (category_id?.toString() ?? "") == key)
-                                                .map(([key, listActivity], index) => (
+                                                .map(([key, listActivity]) => (
                                                 <SelectGroup key={key}>
                                                     <SelectLabel>{categories.find(cat => cat?.id.toString() == key)?.nome}</SelectLabel>
                                                     {(listActivity ?? []).map(activity => (

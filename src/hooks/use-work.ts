@@ -92,7 +92,7 @@ export const useUpsertWork = (id?: number) => {
         onSuccess: () => {
             toast.success("Modifica avvenuta con successo")
         },
-        onError: error => {
+        onError: _error => {
             toast.error("Qualcosa è andato storto, riprova")
         }
     })
