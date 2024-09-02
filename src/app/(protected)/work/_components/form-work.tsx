@@ -116,7 +116,7 @@ export const FormWork = ({work}: {
                                 <FormItem className="w-full">
                                     <FormLabel>Ore</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Inserire il numero di ore che si ha lavorato" type={"number"} value={field.value} onChange={e => field.onChange(+e.target.value)}/>
+                                        <Input placeholder="Inserisci il numero di ore che hai lavorato" type={"number"} value={field.value} onChange={e => field.onChange(+e.target.value)}/>
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
