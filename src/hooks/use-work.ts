@@ -64,13 +64,13 @@ export const useWorkById = (id: number) => {
 }
 
 export const useWorks = () => {
-    const { data } = useQuery(worksIdOptions())
+    const { data, isPending: isPendingId } = useQuery(worksIdOptions())
 
     return useQueries({
         queries: (data ?? []).map(value => workOptions(value.id)),
         combine: (queries) => {
             const isError = queries.some(query => query.status == "error")
-            const isPending = queries.some(query => query.status == "pending")
+            const isPending = queries.some(query => query.status == "pending") || isPendingId
             const data = queries.map((result) => result.data!)
             return {
                 isError, isPending, data

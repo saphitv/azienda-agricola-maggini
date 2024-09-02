@@ -27,13 +27,13 @@ const navbarItems = [
         mustBeAuthenticated: true
     },
     {
-        title: "Login",
+        title: "Accedi",
         href: "/login",
         mustBeAuthenticated: false,
         icon: Icons.login,
     },
     {
-        title: "Register",
+        title: "Registrati",
         href: "/register",
         mustBeAuthenticated: false,
         icon: Icons.register,

@@ -52,7 +52,8 @@ export function HoursChart() {
         <Card className='w-full'>
             <CardHeader>
                 <CardTitle>Ore per mese</CardTitle>
-                <CardDescription>Aprile - Agosto 2024</CardDescription>
+                <CardDescription>{DateTime.now().minus({month: 5}).toLocaleString({month: "long"}, { locale: "it"})} - {DateTime.now().toLocaleString({month: "long", year: "numeric"}, { locale: "it"})}
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>

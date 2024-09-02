@@ -60,7 +60,7 @@ export const LoginForm = () => {
             if (data?.success) {
                 form.reset();
                 setSuccess(data.success);
-                router.push(data.redirect)
+                //router.push(data.redirect)
             }
 
             if (data?.twoFactor) {
@@ -75,9 +75,9 @@ export const LoginForm = () => {
     return (
         <>
             <CardWrapper
-                headerLabel="Welcome back"
+                headerLabel="Bentornato/a"
                 showSocial
-                title={"🔐 Login"}
+                title={"🔐 Accedi"}
             >
                 <Form {...form}>
                     <form
@@ -91,7 +91,7 @@ export const LoginForm = () => {
                                     name="code"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>Two Factor Code</FormLabel>
+                                            <FormLabel>Codice due fattori</FormLabel>
                                             <FormControl>
                                                 <InputOTP maxLength={6} {...field}>
                                                     <InputOTPGroup>
@@ -154,7 +154,7 @@ export const LoginForm = () => {
                                                     className="px-0 font-normal"
                                                 >
                                                     <Link href="/reset">
-                                                        Forgot password?
+                                                        Dimenticata la password?
                                                     </Link>
                                                 </Button>
                                                 <FormMessage/>
@@ -171,7 +171,7 @@ export const LoginForm = () => {
                             type="submit"
                             className="w-full"
                         >
-                            {showTwoFactor ? "Confirm" : "Login"}
+                            {showTwoFactor ? "Conferma" : "Accedi"}
                         </Button>
                     </form>
                 </Form>

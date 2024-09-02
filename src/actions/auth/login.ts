@@ -116,7 +116,7 @@ export const login = async (
         const redirectURL = await signIn("credentials", {
             email,
             password,
-            redirect: false,
+            redirect: true,
             redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
         })
 

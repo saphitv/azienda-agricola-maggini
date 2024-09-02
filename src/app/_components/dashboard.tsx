@@ -6,10 +6,18 @@ import {Button} from "@/components/ui/button";
 import {HoursChart} from "@/app/_components/hours-chart";
 import {CategoryChart} from "@/app/_components/category-chart";
 import {HoursCard} from "@/app/_components/hours-card";
+import {useWorks} from "@/hooks/use-work";
+import {BlankState} from "@/app/_components/blank-state";
 
 export function Dashboard({session}: {session: any}) {
+    const { data: works, isPending} = useWorks()
+    const { data: worksId, isPending: isPendingId} = useWorks()
+
+    console.log(works, isPending, works?.length)
+    if(!isPending && works?.filter(w => !!w).length === 0) return <BlankState/>
+
     return (
-        <>
+        <div className='flex flex-col space-y-4'>
             <RoleGate allowedRole={"ADMIN"}>
                 <div className='space-x-2 '>
                     <Link href={'/category'}><Button variant='secondary'>Categorie</Button></Link>
@@ -21,6 +29,6 @@ export function Dashboard({session}: {session: any}) {
                 <CategoryChart/>
             </div>
             <HoursCard/>
-        </>
+        </div>
     )
 }
