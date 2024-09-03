@@ -10,10 +10,22 @@ import {exportFilters} from "@/app/(protected)/search/_components/data-table";
 import {FormLabel} from "@/components/ui/form";
 import {Label} from "@/components/ui/label";
 import {itCH} from "date-fns/locale";
+import {CalendarDatePicker} from "@/components/calendar-date-picker";
 
 
 
 export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDates: (dates: exportFilters) => void}){
+    return (
+        <CalendarDatePicker
+            date={{
+            from: dates.start?.toJSDate(),
+            to: dates.end?.toJSDate()
+            }}
+            variant={'outline'}
+            onDateSelect={({from, to}) => setDates({start: DateTime.fromJSDate(from), end: DateTime.fromJSDate(to)})}
+        />
+    )
+
     return (
         <div className='w-full flex gap-4'>
             <div className='w-full'>

@@ -6,6 +6,7 @@ import {SessionProvider} from "next-auth/react";
 import {TanstackQueryProvider} from "@/components/tanstack-query-provider";
 import {Navbar} from "@/components/navbar/navbar";
 import { Toaster } from "@/components/ui/sonner";
+import {ThemeProvider} from "next-themes";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -33,6 +34,13 @@ export default function RootLayout({
                 inter.className
             )}
         >
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+        >
+
         <SessionProvider>
             <TanstackQueryProvider>
                 <Toaster richColors={true} position={'top-center'} theme={'light'}/>
@@ -44,6 +52,7 @@ export default function RootLayout({
                 </div>
             </TanstackQueryProvider>
         </SessionProvider>
+        </ThemeProvider>
         </body>
         </html>
 );

@@ -14,9 +14,14 @@ import {DateTime} from "luxon";
 import {useUsers} from "@/hooks/use-users";
 import {useCategories} from "@/hooks/use-category";
 import {useActivities} from "@/hooks/use-activity";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
 
 export default function Page() {
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+
     const [paginationState, setPaginationState] = useState<PaginationState>({
         pageSize: SEARCH_DEFAULT_PAGE_SIZE,
         pageIndex: SEARCH_DEFAULT_PAGE
@@ -43,6 +48,15 @@ export default function Page() {
             .filter(cat => categoryFilters.length == 0 || categoryFilters.includes(cat.id))
             .map(cat => cat.id)
     })
+
+    useEffect(() => {
+        console.log(usersFilters)
+
+        const updatedSearchParams = new URLSearchParams(searchParams.toString())
+        updatedSearchParams.set("usersFilters", usersFilters.join(","))
+
+        window.history.pushState(null, "", "?" + updatedSearchParams.toString())
+    }, [usersFilters]);
 
     const {start = DateTime.now().startOf('month'), end = DateTime.now().endOf('month')} = columnFilters.filter((value, index) => value.id == 'day')[0]?.value as any ?? {}
 
