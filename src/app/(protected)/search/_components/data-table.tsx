@@ -14,8 +14,8 @@ import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {PaginationState, SortingState} from "@tanstack/table-core";
-import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
 import {DateTime} from "luxon";
+import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
 import {SelectUsers} from "@/app/(protected)/search/_components/select-users";
 import {SelectCategory} from "@/app/(protected)/search/_components/select-category";
 
@@ -29,17 +29,14 @@ interface DataTableProps<TData, TValue> {
     setSorting: Dispatch<SetStateAction<SortingState>>
     columnFilters: ColumnFiltersState,
     setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>,
-    usersFilters: string[],
-    setUsersFilters: Dispatch<SetStateAction<string[]>>,
+    //usersFilters: string[],
+    //setUsersFilters: Dispatch<SetStateAction<string[]>>,
     users: { id: string, username: string | null }[]
-    categoryFilters: number[],
-    setCategoryFilters: Dispatch<SetStateAction<number[]>>,
+    //categoryFilters: number[],
+    //setCategoryFilters: Dispatch<SetStateAction<number[]>>,
 }
 
-export type exportFilters = {
-    start: DateTime | undefined,
-    end:  DateTime | undefined,
-}
+export type exportFilters = [DateTime, DateTime]
 
 export function DataTable<TData, TValue>({
                                             columns,
@@ -48,13 +45,10 @@ export function DataTable<TData, TValue>({
                                             setPaginationState, paginationState,
                                             sorting, setSorting,
                                             columnFilters, setColumnFilters,
-                                            usersFilters, users, setUsersFilters,
-                                            categoryFilters, setCategoryFilters
+                                            users
+                                            //usersFilters, users, setUsersFilters,
+                                            //categoryFilters, setCategoryFilters
                                          }: DataTableProps<TData, TValue>) {
-    const [filterDates, setFilterDates] = useState<exportFilters>({
-        start: DateTime.now().startOf('month'),
-        end: DateTime.now().endOf('month')
-    })
 
     const [columnVisibility, setColumnVisibility] =
         useState<VisibilityState>({"id": false})
@@ -89,11 +83,6 @@ export function DataTable<TData, TValue>({
         }
     })
 
-    useEffect(() => {
-        table.getColumn('day')?.setFilterValue(filterDates)
-    }, [table, filterDates])
-
-
     return (
         <div className='h-full'>
             <div className="flex flex-col items-center py-4 space-y-2">
@@ -105,9 +94,19 @@ export function DataTable<TData, TValue>({
                     }
                     className="w-full"
                 />
-                <DatePickerPreset dates={filterDates} setDates={setFilterDates} />
-                <SelectUsers usersFilters={usersFilters} setUsersFilters={setUsersFilters} users={users} />
-                <SelectCategory categoryFilters={categoryFilters} setCategoryFilters={setCategoryFilters} />
+                <DatePickerPreset
+                    dates={(table.getColumn("day")!.getFilterValue() as string[]).map(d => DateTime.fromISO(d)) as exportFilters}
+                    setDates={dates => table.getColumn("day")?.setFilterValue(dates.map(d => d.toISO()))}
+                />
+                <SelectUsers
+                    usersFilters={table.getColumn('user_id')?.getFilterValue() as string[] ?? []}
+                    setUsersFilters={usersFilter => table.getColumn('user_id')?.setFilterValue(usersFilter)}
+                    users={users}
+                />
+                <SelectCategory
+                    categoryFilters={table.getColumn('categoria')?.getFilterValue() as number[] ?? []}
+                    setCategoryFilters={categories => table.getColumn('categoria')?.setFilterValue(categories)}
+                />
                 {/*<DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">

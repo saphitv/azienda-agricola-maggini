@@ -1,15 +1,14 @@
 "use client"
 
-import {ColumnDef, FilterFn, Row} from "@tanstack/react-table"
+import {ColumnDef, FilterFn} from "@tanstack/react-table"
 import {useActivityById} from "@/hooks/use-activity";
 import {Work} from "@/actions/work";
 import {Drawer, DrawerContent, DrawerTrigger} from "@/components/ui/drawer";
 import {Button} from "@/components/ui/button";
 import {ArrowUpDown, Edit, Trash} from "lucide-react";
-import {FormCategoria} from "@/app/(protected)/category/_components/form-categoria";
 import {useDeleteWork} from "@/hooks/use-work";
 import {FormWork} from "@/app/(protected)/work/_components/form-work";
-import { DateTime } from "luxon";
+import {DateTime} from "luxon";
 import {useCategoryById} from "@/hooks/use-category";
 import {Badge} from "@/components/ui/badge";
 import {useUsers} from "@/hooks/use-users";
@@ -21,12 +20,14 @@ const filterFunction: FilterFn<Work> = (row, columnId, filterValue) => {
     return searchableRowContent.toLowerCase().includes(filterValue.toLowerCase());
 }
 
-const filterDateFn: FilterFn<Work> = (row, columnId, filterValue, addMeta) => {
+const isWithinRange: FilterFn<Work> = (row, columnId, filterValue, addMeta) => {
+    const date = DateTime.fromJSDate(row.getValue(columnId))
+
     const {start, end} = filterValue as { start?: DateTime, end?: DateTime}
 
-    if(start && start.diff(DateTime.fromJSDate(row.original.day)).toMillis() < 0) return false
+    if(start && start.diff(date).toMillis() < 0) return false
 
-    if(end && end.diff(DateTime.fromJSDate(row.original.day)).toMillis() > 0) return false
+    if(end && end.diff(date).toMillis() > 0) return false
 
     return true
 
@@ -79,7 +80,7 @@ export const columns: ColumnDef<Work>[] = [
                 </div>
             )
         },
-        filterFn: filterDateFn
+        filterFn: isWithinRange
     },
     {
         accessorKey: "hour",
