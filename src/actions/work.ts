@@ -7,6 +7,7 @@ import {SEARCH_DEFAULT_PAGE, SEARCH_DEFAULT_PAGE_SIZE} from "@/lib/settings";
 import {SortingState} from "@tanstack/table-core";
 import {DateTime} from "luxon";
 import {inArray} from "drizzle-orm/sql/expressions/conditions";
+import {WorkFilters} from "@/hooks/use-work";
 
 export type Work = {
     id: number;
@@ -20,7 +21,7 @@ export type Work = {
 
 
 
-export type NewWork = InferInsertModel<typeof works>;
+export type NewWork = InferInsertModel<typeof works>
 
 export const getWorkById = async (id: number): Promise<Work | undefined> => {
     const data =  (await db.select({
@@ -36,7 +37,7 @@ export const getWorkById = async (id: number): Promise<Work | undefined> => {
         .where(eq(works.id, id))
     )[0] ?? undefined
 
-    return data
+    return {...data, hour: +data.hour}
 }
 
 export const getAllWorkId = async (): Promise<{id: number}[]> => {
@@ -48,22 +49,8 @@ export const getAllWorkId = async (): Promise<{id: number}[]> => {
         .orderBy(desc(works.day))
 }
 
-export const getWorksIdFiltered = async (filtersAndPagination: {
-    hour?: number;
-    filterValue?: string;
-    pageIndex?: number;
-    sorting?: SortingState;
-    name?: string;
-    activity_id?: number | null;
-    description?: string | null;
-    pageSize?: number;
-    id?: number;
-    day?: Date;
-    dateFilterValues: { start: string | null | undefined; end: string | null | undefined },
-    usersFilter: string[],
-    categoryFilter: number[]
-}) => {
-    const {
+export const getWorksIdFiltered = async (filters: WorkFilters) => {
+    /*const {
         pageIndex = SEARCH_DEFAULT_PAGE,
         pageSize = SEARCH_DEFAULT_PAGE_SIZE,
         sorting,
@@ -71,7 +58,19 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
         dateFilterValues,
         usersFilter,
         categoryFilter
-    } = filtersAndPagination
+    } = filtersAndPagination*/
+
+    const {
+        paginationState = { pageIndex: 0, pageSize: 10000},
+        sorting,
+        columnFilters
+    } = filters
+
+    const nameDescriptionFilter = columnFilters?.find(f => f.id == "name")?.value ?? ""
+    const [start, end] = columnFilters?.find(f => f.id == "day")?.value.map((data: string) => DateTime.fromISO(data).toJSDate())
+    const usersFilter = columnFilters?.find(f => f.id == "user_id")?.value as string[] ?? []
+    const categoryFilter = columnFilters?.find(f => f.id == "categoria")?.value as number[] ?? []
+
 
     const allData = db.$with('allData').as(
         db.select({id: works.id, day: works.day})
@@ -80,12 +79,12 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
             .where(
             and(
                 or(
-                    or(like(works.nome, `%${filterValue}%`), like(works.description, `%${filterValue}%`),),
-                    sql`${filterValue ?? ""} = ''`
+                    or(like(works.nome, `%${nameDescriptionFilter}%`), like(works.description, `%${nameDescriptionFilter}%`),),
+                    sql`${nameDescriptionFilter ?? ""} = ''`
                 ),
                 and(
-                    gt(works.day, dateFilterValues.start ? DateTime.fromHTTP(dateFilterValues.start).toJSDate() : DateTime.now().startOf('month').toJSDate()),
-                    lt(works.day, dateFilterValues.end ? DateTime.fromHTTP(dateFilterValues.end).toJSDate() : DateTime.now().endOf('month').toJSDate())
+                    gt(works.day, start ?? DateTime.now().startOf('month').toJSDate()),
+                    lt(works.day, end ?? DateTime.now().endOf('month').toJSDate())
                 ),
                 or(
                     sql`${usersFilter.length} = 0`,
@@ -107,8 +106,8 @@ export const getWorksIdFiltered = async (filtersAndPagination: {
         id: allData.id,
         rowCount: cnt.rowCount
     }).from(allData).innerJoin(cnt, sql`9 = 9`)
-        .offset(pageSize * pageIndex)
-        .limit(pageSize)
+        .offset(paginationState.pageSize * paginationState.pageIndex)
+        .limit(paginationState.pageSize)
         .orderBy(sorting?.length == 1 && !sorting[0].desc && sorting[0].id == "day" ? asc(allData.day) : desc(allData.day))
 
     return {

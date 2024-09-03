@@ -409,7 +409,7 @@ export const CalendarDatePicker = React.forwardRef<
                             ref={ref}
                             {...props}
                             className={cn(
-                                "w-auto",
+                                "w-full",
                                 multiSelectVariants({ variant, className })
                             )}
                             onClick={handleTogglePopover}

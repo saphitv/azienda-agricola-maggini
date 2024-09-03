@@ -74,7 +74,7 @@ export const FormWork = ({work}: {
             day: values.day,
             activity_id: values.activity_id,
             description: values.description,
-            ore: values.hour,
+            ore: values.hour.toString(),
         })
     }
 

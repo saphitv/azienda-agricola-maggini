@@ -1,20 +1,36 @@
-import { Button } from "@/components/ui/button";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {cn} from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
-import {Calendar} from "@/components/ui/calendar";
-import {addDays, format} from "date-fns";
+import {ArrowLeftFromLine, ArrowRightFromLine} from "lucide-react";
 import {DateTime} from "luxon";
-import {exportFilters} from "@/app/(protected)/search/_components/data-table";
-import {FormLabel} from "@/components/ui/form";
-import {Label} from "@/components/ui/label";
 import {itCH} from "date-fns/locale";
-import {CalendarDatePicker} from "@/components/calendar-date-picker";
-
+import {DateTimePicker} from "@/components/datetime-picker";
+import {exportFilters} from "@/app/(protected)/search/_components/data-table";
 
 
 export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDates: (dates: exportFilters) => void}){
+    const [start, end] = dates
+
+    return (
+        <div className='w-full flex gap-2 sm:gap-4 flex-col sm:flex-row'>
+            <DateTimePicker
+                value={start?.toJSDate()}
+                onChange={(value) => setDates([DateTime.fromJSDate(value ?? start!.toJSDate()), end])}
+                granularity='day'
+                weekStartsOn={1}
+                displayFormat={{hour24: 'PPP'}}
+                locale={itCH}
+                icon={<ArrowRightFromLine className="mr-2 h-4 w-4" />}
+            />
+            <DateTimePicker
+                value={end?.toJSDate()}
+                onChange={(value) => setDates([start, DateTime.fromJSDate(value ?? end!.toJSDate())])}
+                granularity='day'
+                weekStartsOn={1}
+                displayFormat={{hour24: 'PPP'}}
+                locale={itCH}
+                icon={<ArrowLeftFromLine  className="mr-2 h-4 w-4" />}
+            />
+        </div>
+    )
+/*
     return (
         <CalendarDatePicker
             date={{
@@ -109,5 +125,5 @@ export function DatePickerPreset({dates, setDates}: {dates: exportFilters, setDa
                 </Popover>
             </div>
         </div>
-    )
+    )*/
 }

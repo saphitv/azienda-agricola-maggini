@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useImperativeHandle, useRef } from 'react';
+import {ReactNode, useImperativeHandle, useRef} from 'react';
 import { add, format } from 'date-fns';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -622,6 +622,7 @@ type DateTimePickerProps = {
      * By default, the value is `second` which shows all time inputs.
      **/
     granularity?: Granularity;
+    icon?: ReactNode
 } & Pick<CalendarProps, 'locale' | 'weekStartsOn' | 'showWeekNumber' | 'showOutsideDays'>;
 
 type DateTimePickerRef = {
@@ -640,6 +641,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
             displayFormat,
             granularity = 'second',
             placeholder = 'Pick a date',
+            icon,
             ...props
         },
         ref,
@@ -689,7 +691,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
                         )}
                         ref={buttonRef}
                     >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {icon ?? <CalendarIcon className="mr-2 h-4 w-4" /> }
                         {value ? (
                             format(value, hourCycle === 24 ? initHourFormat.hour24 : initHourFormat.hour12, {
                                 locale,

@@ -1,11 +1,9 @@
 "use client"
-import {StyleSheet, View, Text, PDFViewer, Page, Document} from "@react-pdf/renderer";
-import {useWorks} from "@/hooks/use-work";
+import {Document, Page, StyleSheet, Text, View} from "@react-pdf/renderer";
 import {DateTime} from "luxon";
 import {Work} from "@/actions/work";
 import {SimpleUser} from "@/types/user";
 import {Activity} from "@/actions/activity";
-import {activities} from "@/lib/db/schemas/general";
 
 const styles = StyleSheet.create({
     table: {
@@ -57,6 +55,8 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
     enddate: DateTime,
     activities: Activity[]
 }){
+
+
     return (
         <Document>
             <Page size='A4'>

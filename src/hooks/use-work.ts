@@ -5,14 +5,15 @@ import {deleteWork, getAllWorkId, getWorkById, getWorksIdFiltered, NewWork, upse
 import {Filters} from "@/types/table";
 
 
-export type WorkFilters = Filters<Work>
+export type WorkFilters = Filters<{}>
 
 export const workOptions = (id: number) => {
     return queryOptions({
         queryKey: ['works', id],
         queryFn: () => getWorkById(id),
         staleTime: 1000 * 60 * 30, // 30 min,
-        enabled: !!id
+        enabled: !!id,
+        placeholderData: keepPreviousData
     })
 }
 
@@ -21,6 +22,7 @@ export const worksIdOptions = () => {
         queryKey: ['works'],
         queryFn: () => getAllWorkId(),
         staleTime: 1000 * 60 * 30, // 30 min,
+        placeholderData: keepPreviousData
     })
 }
 
@@ -29,15 +31,7 @@ export const worksIdOptions = () => {
 export const worksIdFilteredOptions = (filters: WorkFilters) => {
     return queryOptions({
         queryKey: ['works', filters],
-        queryFn: () => getWorksIdFiltered({
-            ...filters,
-            dateFilterValues: {
-                start: filters.dateFilterValues?.start?.toHTTP(),
-                end: filters.dateFilterValues?.end?.toHTTP(),
-            },
-            usersFilter: filters.usersFilter ?? [],
-            categoryFilter: filters.categoryFilter ?? []
-        }),
+        queryFn: () => getWorksIdFiltered(filters),
         placeholderData: keepPreviousData
     })
 }
