@@ -10,7 +10,6 @@ import { getUserByEmail } from "@/lib/http-db/utils/auth/user";
 
 
 export default {
-    debug: true,
     cookies: {
       csrfToken: {
           options: {
