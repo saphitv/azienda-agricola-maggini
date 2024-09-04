@@ -15,7 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {
@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
         }
     })
 
+    const formContainerRef = useRef<HTMLDivElement | null>(null);
 
 
     return (
@@ -107,7 +108,7 @@ export function DataTable<TData, TValue>({
                         <Button>Crea Lavoro</Button>
                     </DrawerTrigger>
 
-                    <DrawerContent>
+                    <DrawerContent ref={formContainerRef} className='bg-white flex flex-col fixed bottom-0 left-0 right-0 max-h-[96%] rounded-t-[10px]'>
                         <FormWork />
                     </DrawerContent>
                 </Drawer>

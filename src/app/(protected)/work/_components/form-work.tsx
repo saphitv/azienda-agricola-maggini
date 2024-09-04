@@ -24,7 +24,7 @@ import {DateTimePicker} from "@/components/datetime-picker";
 import {Textarea} from "@/components/ui/textarea";
 import {DateTime} from "luxon";
 import {useCategories} from "@/hooks/use-category";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {itCH} from 'date-fns/locale'
 
 const workSchema = z.object({
@@ -67,6 +67,8 @@ export const FormWork = ({work}: {
     }, [category_id, activity_id, activities, form])
 
 
+
+
     const onSubmit = (values: z.infer<typeof workSchema>) => {
         mutate({
             id: work?.id,
@@ -79,7 +81,7 @@ export const FormWork = ({work}: {
     }
 
     return (
-        <div className=''>
+        <div className='max-w-md w-full mx-auto flex flex-col overflow-auto px-0 py-1 rounded-t-[10px]'>
             <Form {...form} >
                 <form onSubmit={form.handleSubmit(onSubmit)} className='px-2'>
                     <DrawerHeader>
@@ -121,6 +123,8 @@ export const FormWork = ({work}: {
                                 </FormItem>
                             )}
                         />
+
+
 
                         <FormField
                             control={form.control}
@@ -184,6 +188,7 @@ export const FormWork = ({work}: {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="name"

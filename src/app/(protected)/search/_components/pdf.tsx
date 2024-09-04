@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 8,
         maxHeight: 80,
-        textOverflow: 'ellipsis'
+        textOverflow: 'ellipsis',
+        paddingHorizontal: 4
     },
     header: {
         borderTop: 'none',
@@ -48,6 +49,8 @@ const styles = StyleSheet.create({
     },
 })
 
+
+
 export function PDFLavori({data, startdate, enddate, users, activities}: {
     data: Work[],
     users: SimpleUser[],
@@ -55,11 +58,9 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
     enddate: DateTime,
     activities: Activity[]
 }){
-
-    const d = Object.entries(Object.groupBy(data, (d) => DateTime.fromJSDate(d.day).toLocaleString({ year: "numeric", month: "long"})))
-        .map(([xperio, data]) => ([xperio, data, (data ?? []).reduce((acc, curr) => acc + curr.hour, 0)])) as any as [string, Work[], number][]
-
-    console.log(d)
+    const d = Object.entries(Object.groupBy(data, (d) => DateTime.fromJSDate(d.day).toLocaleString({ year: "numeric", month: "long"}, { locale: "it"})))
+        // @ts-expect-error added the functionality above
+        .map(([xperio, data]) => ([xperio.at(0).toUpperCase() + xperio.slice(1), data, (data ?? []).reduce((acc, curr) => acc + curr.hour, 0)])) as any as [string, Work[], number][]
 
 
     return (
@@ -67,9 +68,10 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
             <Page size='A4'>
 
                 <View style={styles.table}>
-                    <Text style={[styles.bold, { fontSize: 14, marginBottom: 20}]}>Lavori periodo
-                        {startdate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"}, { locale: "it"})} -
-                        {enddate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"}, { locale: "it"})}
+                            <Text style={[styles.bold, { fontSize: 14, marginBottom: 20}]}>Lavori dal&nbsp;
+                                &quot;{startdate.toLocaleString({day: "2-digit", month: "short", year: "numeric"}, { locale: "it"})}&quot; al&nbsp;
+                                &quot;{enddate.toLocaleString({day: "2-digit", month: "short", year: "numeric"}, { locale: "it"})}&quot; con un totale di&nbsp;
+                                &quot;{d.reduce((prev, curr) => prev + curr[2], 0)}&quot; Ore
                     </Text>
                     {/*<View style={[styles.row, styles.bold, styles.header]}>
                         <Text style={styles.col1}>Persona</Text>
@@ -81,7 +83,7 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
                     </View> */}
                     {d.map(([xperio, rows, total], i) => (
                         <>
-                        <View key={xperio + i} style={[styles.row, { fontWeight: "bold"}]}>
+                        <View key={xperio + i} style={[{ fontWeight: "bold", fontSize: 18}]}>
                             <Text>{xperio}</Text>
                         </View>
                             <View style={[styles.row, styles.bold, styles.header]}>
@@ -102,7 +104,7 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
                                     <Text style={styles.col6}>{row.description}</Text>
                                 </View>
                             ))}
-                            <View key={xperio + i} style={[styles.row, { backgroundColor: 'lightgray', marginBottom: 30}]}>
+                            <View key={xperio + i} style={[styles.row, { backgroundColor: '#939393', marginBottom: 30}]}>
                                 <Text style={styles.col1}>Totale</Text>
                                 <Text style={styles.col2}></Text>
                                 <Text style={styles.col3}>{total}</Text>
