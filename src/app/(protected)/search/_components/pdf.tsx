@@ -56,33 +56,58 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
     activities: Activity[]
 }){
 
+    const d = Object.entries(Object.groupBy(data, (d) => DateTime.fromJSDate(d.day).toLocaleString({ year: "numeric", month: "long"})))
+        .map(([xperio, data]) => ([xperio, data, (data ?? []).reduce((acc, curr) => acc + curr.hour, 0)])) as any as [string, Work[], number][]
+
+    console.log(d)
+
 
     return (
         <Document>
             <Page size='A4'>
 
                 <View style={styles.table}>
-                    <Text style={[styles.bold, { fontSize: 20, marginBottom: 20}]}>Lavori periodo
-                        {startdate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})} -
-                        {enddate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"})}
+                    <Text style={[styles.bold, { fontSize: 14, marginBottom: 20}]}>Lavori periodo
+                        {startdate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"}, { locale: "it"})} -
+                        {enddate.toLocaleString({day: "2-digit", month: "2-digit", year: "numeric"}, { locale: "it"})}
                     </Text>
-                    <View style={[styles.row, styles.bold, styles.header]}>
+                    {/*<View style={[styles.row, styles.bold, styles.header]}>
                         <Text style={styles.col1}>Persona</Text>
                         <Text style={styles.col2}>Giorno</Text>
                         <Text style={styles.col3}>Ore</Text>
                         <Text style={styles.col4}>Attività</Text>
                         <Text style={styles.col5}>Nome</Text>
                         <Text style={styles.col6}>Descrizione</Text>
-                    </View>
-                    {data.map((row, i) => (
-                        <View key={i} style={[styles.row, {backgroundColor: i % 2 == 0 ? '' : 'lightgray'}]} wrap={false}>
-                            <Text style={styles.col1}>{users.find(user => user.id == row.user_id)?.username}</Text>
-                            <Text style={styles.col2}>{DateTime.fromJSDate(row?.day).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})}</Text>
-                            <Text style={styles.col3}>{row.hour}</Text>
-                            <Text style={styles.col4}>{activities.find(act => act.id == row.activity_id)?.nome}</Text>
-                            <Text style={styles.col5}>{row.name}</Text>
-                            <Text style={styles.col6}>{row.description}</Text>
+                    </View> */}
+                    {d.map(([xperio, rows, total], i) => (
+                        <>
+                        <View key={xperio + i} style={[styles.row, { fontWeight: "bold"}]}>
+                            <Text>{xperio}</Text>
                         </View>
+                            <View style={[styles.row, styles.bold, styles.header]}>
+                                <Text style={styles.col1}>Persona</Text>
+                                <Text style={styles.col2}>Giorno</Text>
+                                <Text style={styles.col3}>Ore</Text>
+                                <Text style={styles.col4}>Attività</Text>
+                                <Text style={styles.col5}>Nome</Text>
+                                <Text style={styles.col6}>Descrizione</Text>
+                            </View>
+                            {rows.map((row, i) => (
+                                <View key={i} style={[styles.row, {backgroundColor: i % 2 == 0 ? '' : 'lightgray'}]} wrap={false}>
+                                    <Text style={styles.col1}>{users.find(user => user.id == row.user_id)?.username}</Text>
+                                    <Text style={styles.col2}>{DateTime.fromJSDate(row?.day).toLocaleString({ day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "numeric", hourCycle: "h24"})}</Text>
+                                    <Text style={styles.col3}>{row.hour}</Text>
+                                    <Text style={styles.col4}>{activities.find(act => act.id == row.activity_id)?.nome}</Text>
+                                    <Text style={styles.col5}>{row.name}</Text>
+                                    <Text style={styles.col6}>{row.description}</Text>
+                                </View>
+                            ))}
+                            <View key={xperio + i} style={[styles.row, { backgroundColor: 'lightgray', marginBottom: 30}]}>
+                                <Text style={styles.col1}>Totale</Text>
+                                <Text style={styles.col2}></Text>
+                                <Text style={styles.col3}>{total}</Text>
+                            </View>
+                        </>
                     ))}
                 </View>
             </Page>
