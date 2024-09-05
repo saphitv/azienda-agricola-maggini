@@ -6,6 +6,7 @@
 export const publicRoutes = [
   // "/",
   "/new-verification",
+    "/disabled"
   // endpoint for external services to ping (stripe, etc)
 ];
 

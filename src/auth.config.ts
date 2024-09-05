@@ -10,20 +10,6 @@ import { getUserByEmail } from "@/lib/http-db/utils/auth/user";
 
 
 export default {
-    cookies: {
-      csrfToken: {
-          options: {
-              httpOnly: false,
-              secure: process.env.PROD == "true"
-          }
-      },
-        sessionToken: {
-          options: {
-              httpOnly: false,
-              secure: process.env.PROD == "true"
-          }
-        }
-    },
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,

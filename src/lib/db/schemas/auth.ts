@@ -34,6 +34,7 @@ export const users = mysqlTable("user", {
     password: varchar("password", { length: 255 }),
     role: text("role", {enum: ["USER", "ADMIN"]}).default("USER"),
     isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
+    enabled: boolean("enabled").default(false)
 })
 
 export const accounts = mysqlTable(

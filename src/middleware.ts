@@ -2,15 +2,15 @@ import NextAuth from "next-auth";
 
 import authConfig from "@/auth.config";
 import {apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes,} from "@/routes";
+import {getSession} from "next-auth/react";
+import {auth} from "@/auth";
 
-const { auth } = NextAuth(authConfig);
+//const { auth } = NextAuth(authConfig);
 
 // @ts-ignore
-export default auth((req) => {
+export default auth(async (req) => {
     const { nextUrl } = req;
     const isLoggedIn = !!req.auth;
-
-    console.log(nextUrl.pathname, isLoggedIn)
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -40,6 +40,13 @@ export default auth((req) => {
             nextUrl
         ));
     }
+
+    console.log(!req.auth?.user.enabled)
+
+    if(!req.auth?.user.enabled && !isPublicRoute) return Response.redirect(new URL(
+        `/disabled`,
+        nextUrl
+    ));
 })
 
 // Optionally, don't invoke Middleware on some paths

@@ -59,7 +59,6 @@ export const {
                 session.user.id = token.sub;
             }
 
-
             if (token.role && session.user) {
                 session.user.role = token.role as UserRoleEnum;
             }
@@ -74,7 +73,9 @@ export const {
                     session.user.email = token.email;
                 }
                 session.user.isOAuth = token.isOAuth as boolean;
+                session.user.enabled = !!token.enabled
             }
+
             //console.log("end session", session)
 
             //console.log("ens session", session)
@@ -97,7 +98,9 @@ export const {
             token.email = existingUser.email;
             token.role = existingUser.role;
             token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+            token.enabled = existingUser.enabled
 
+            //console.log(token)
             return token;
         }
     },
