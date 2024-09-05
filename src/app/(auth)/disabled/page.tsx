@@ -15,7 +15,7 @@ export default async function Page(){
                 <LockIcon className="mx-auto h-16 w-16 text-gray-500 dark:text-gray-400"/>
                 <h1 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-gray-50">Account disabilitato</h1>
                 <p className="text-gray-500 dark:text-gray-400">
-                    Il tuo account non è abilitato, per abilitare il tuo account contatta l'amministratore (Simon) tramite messaggio o all&apos;indirizzo email: simonmaggini@gmail.com
+                    Il tuo account non è abilitato, per abilitare il tuo account contatta l&apos;amministratore (Simon) tramite messaggio o all&apos;indirizzo email: simonmaggini@gmail.com
                 </p>
             </div>
         </div>
