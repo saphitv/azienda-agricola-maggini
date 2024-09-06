@@ -67,8 +67,8 @@ export function PDFLavori({data, startdate, enddate, users, activities}: {
         <Document>
             <Page size='A4'>
 
-                <View style={styles.table}>
-                            <Text style={[styles.bold, { fontSize: 14, marginBottom: 20}]}>Lavori dal&nbsp;
+                <View style={[styles.table]}>
+                            <Text style={[styles.bold, { fontSize: 14, marginBottom: 20, borderBottom: "1px solid black", paddingBottom: 2}]}>Lavori dal&nbsp;
                                 &quot;{startdate.toLocaleString({day: "2-digit", month: "short", year: "numeric"}, { locale: "it"})}&quot; al&nbsp;
                                 &quot;{enddate.toLocaleString({day: "2-digit", month: "short", year: "numeric"}, { locale: "it"})}&quot; con un totale di&nbsp;
                                 &quot;{d.reduce((prev, curr) => prev + curr[2], 0)}&quot; Ore
