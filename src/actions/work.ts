@@ -8,6 +8,7 @@ import {SortingState} from "@tanstack/table-core";
 import {DateTime} from "luxon";
 import {inArray} from "drizzle-orm/sql/expressions/conditions";
 import {WorkFilters} from "@/hooks/use-work";
+import {auth} from "@/auth";
 
 export type Work = {
     id: number;
@@ -59,6 +60,9 @@ export const getWorksIdFiltered = async (filters: WorkFilters) => {
         usersFilter,
         categoryFilter
     } = filtersAndPagination*/
+    const session = await auth()
+
+    if(!session) return new Error("Not authenticated")
 
     const {
         paginationState = { pageIndex: 0, pageSize: 10000},
@@ -68,7 +72,8 @@ export const getWorksIdFiltered = async (filters: WorkFilters) => {
 
     const nameDescriptionFilter = columnFilters?.find(f => f.id == "name")?.value ?? ""
     const [start, end] = columnFilters?.find(f => f.id == "day")?.value.map((data: string) => DateTime.fromISO(data).toJSDate())
-    const usersFilter = columnFilters?.find(f => f.id == "user_id")?.value as string[] ?? []
+    // only admin can filter by user
+    const usersFilter: string[] = session.user.role == "ADMIN" ? columnFilters?.find(f => f.id == "user_id")?.value as string[] ?? [] : [session.user.id!]
     const categoryFilter = columnFilters?.find(f => f.id == "categoria")?.value as number[] ?? []
 
 

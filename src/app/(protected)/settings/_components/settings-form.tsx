@@ -31,7 +31,6 @@ export default function SettingsForm() {
             newPassword: undefined,
             name: user?.name ?? '',
             email: user?.email ?? '',
-            role: (user?.role as UserRoleEnum),
             isTwoFactorEnabled: user?.isTwoFactorEnabled ? 1 : 0,
         }
     });
@@ -40,7 +39,6 @@ export default function SettingsForm() {
     useEffect(() => {
         form.setValue('name', user?.name ?? '')
         form.setValue('email', user?.email ?? '')
-        form.setValue('role', user?.role!)
         form.setValue('isTwoFactorEnabled', user?.isTwoFactorEnabled ? 1 : 0)
     }, [form, user])
 
@@ -145,35 +143,6 @@ export default function SettingsForm() {
                           />
                       </>
                   )}
-                  <FormField
-                      control={form.control}
-                      name="role"
-                      render={({ field }) => (
-                          <FormItem>
-                              <FormLabel>Role</FormLabel>
-                              <Select
-                                  disabled={isPending}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                              >
-                                  <FormControl>
-                                      <SelectTrigger>
-                                          <SelectValue placeholder="Select a role" />
-                                      </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                      <SelectItem value={UserRoleEnum.ADMIN}>
-                                          Admin
-                                      </SelectItem>
-                                      <SelectItem value={UserRoleEnum.USER}>
-                                          User
-                                      </SelectItem>
-                                  </SelectContent>
-                              </Select>
-                              <FormMessage />
-                          </FormItem>
-                      )}
-                  />
                   {user?.isOAuth === false && (
                       <FormField
                           control={form.control}

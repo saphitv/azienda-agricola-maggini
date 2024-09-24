@@ -84,7 +84,6 @@ export const settings = async (
             name: values.name,
             email: values.email,
             isTwoFactorEnabled: !!values.isTwoFactorEnabled,
-            role: values.role,
             password: values.password,
         })
         .where(eq(users.id, dbUser.id))
@@ -96,7 +95,6 @@ export const settings = async (
             name: updatedUser.name,
             email: updatedUser.email,
             isTwoFactorEnabled: !!updatedUser.isTwoFactorEnabled,
-            role: (updatedUser.role as UserRoleEnum) || undefined,
         }
     });
 

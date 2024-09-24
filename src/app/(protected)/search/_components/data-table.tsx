@@ -18,6 +18,7 @@ import {DateTime} from "luxon";
 import {DatePickerPreset} from "@/app/(protected)/search/_components/date-picker-preset";
 import {SelectUsers} from "@/app/(protected)/search/_components/select-users";
 import {SelectCategory} from "@/app/(protected)/search/_components/select-category";
+import {RoleGate} from "@/components/auth/role-gate";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -98,11 +99,13 @@ export function DataTable<TData, TValue>({
                     dates={(table.getColumn("day")!.getFilterValue() as string[]).map(d => DateTime.fromISO(d)) as exportFilters}
                     setDates={dates => table.getColumn("day")?.setFilterValue(dates.map(d => d.toISO()))}
                 />
-                <SelectUsers
-                    usersFilters={table.getColumn('user_id')?.getFilterValue() as string[] ?? []}
-                    setUsersFilters={usersFilter => table.getColumn('user_id')?.setFilterValue(usersFilter)}
-                    users={users}
-                />
+                <RoleGate allowedRole={"ADMIN"}>
+                    <SelectUsers
+                        usersFilters={table.getColumn('user_id')?.getFilterValue() as string[] ?? []}
+                        setUsersFilters={usersFilter => table.getColumn('user_id')?.setFilterValue(usersFilter)}
+                        users={users}
+                    />
+                </RoleGate>
                 <SelectCategory
                     categoryFilters={table.getColumn('categoria')?.getFilterValue() as number[] ?? []}
                     setCategoryFilters={categories => table.getColumn('categoria')?.setFilterValue(categories)}

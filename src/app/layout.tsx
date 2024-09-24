@@ -20,7 +20,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
     maximumScale: 1,
     viewportFit: "cover",
-
 }
 
 export default function RootLayout({
@@ -31,7 +30,7 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
-            <link rel="icon" href="/Grapes%20icon.svg>" sizes="any" />
+            <link rel="icon" href="/favicon.svg" sizes="any" />
         </head>
         <body
             className={cn(
